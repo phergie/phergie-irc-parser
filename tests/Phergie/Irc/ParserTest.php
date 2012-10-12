@@ -1,0 +1,2221 @@
+<?php
+/**
+ * Phergie (http://phergie.org)
+ *
+ * @link http://github.com/phergie/phergie-irc-parser for the canonical source repository
+ * @copyright Copyright (c) 2008-2012 Phergie Development Team (http://phergie.org)
+ * @license http://phergie.org/license New BSD License
+ * @package Phergie\Irc
+ */
+
+namespace Phergie\Irc;
+
+/**
+ * Tests for \Phergie\Irc\Parser.
+ *
+ * @category Phergie
+ * @package Phergie\Irc
+ */
+class ParserTest extends \PHPUnit_Framework_TestCase
+{
+    /**
+     * Tests parse().
+     *
+     * @param string $message Parameter for parse() call
+     * @param array|null $result Expected return value of parse()
+     * @dataProvider dataProviderTestParse
+     * @see \Phergie\Irc\Parser::parse()
+     */
+    public function testParse($message, $result)
+    {
+        $parser = new Parser;
+        $this->assertEquals($result, $parser->parse($message));
+    }
+
+    /**
+     * Tests parseAll().
+     *
+     * @param string $message Parameter for parseAll() call
+     * @param array|null $result Expected return value of parseAll()
+     * @dataProvider dataProviderTestParseAll
+     * @see \Phergie\Irc\Parser::parseAll()
+     */
+    public function testParseAll($message, $result)
+    {
+        $parser = new Parser;
+        $this->assertEquals($result, $parser->parseAll($message));
+    }
+
+    /**
+     * Tests consume().
+     *
+     * @param string $message Parameter for consume() call
+     * @param array|null $result Expected return value of consume()
+     * @dataProvider dataProviderTestParse
+     * @see \Phergie\Irc\Parser::consume()
+     */
+    public function testConsume($message, $result)
+    {
+        $parser = new Parser;
+        $this->assertEquals($result, $parser->consume($message));
+        if (isset($result['tail'])) {
+            $this->assertEquals($message, $result['tail']);
+        }
+    }
+
+    /**
+     * Tests consumeAll().
+     *
+     * @param string $message Parameter for consumeAll() call
+     * @param array|null $result Expected return value of consumeAll()
+     * @dataProvider dataProviderTestParseAll
+     * @see \Phergie\Irc\Parser::consumeAll()
+     */
+    public function testConsumeAll($message, $result)
+    {
+        $parser = new Parser;
+        $this->assertEquals($result, $parser->consumeAll($message));
+        if ($result) {
+            $last = $result;
+            if (isset($result['tail'])) {
+                $this->assertEquals($message, $result['tail']);
+            }
+        }
+    }
+
+    /**
+     * Data provider for testParse().
+     *
+     * @return array
+     */
+    public function dataProviderTestParse()
+    {
+        $data = array(
+            // Empty message
+            array(
+                '',
+                null
+            ),
+
+            // No CRLF
+            array(
+                'REHASH',
+                null
+            ),
+            array(
+                'NICK :Elazar',
+                null,
+            ),
+
+            // Data past the first message
+            array(
+                "USER guest tolmoon tolsun :Ronnie Regan\r\nNICK :Wiz",
+                array(
+                    'command' => 'USER',
+                    'params' => array(
+                        'username' => 'guest',
+                        'hostname' => 'tolmoon',
+                        'servername' => 'tolsun',
+                        'realname' => 'Ronnie Regan',
+                        'all' => 'guest tolmoon tolsun :Ronnie Regan',
+                    ),
+                    'targets' => array('guest'),
+                    'message' => "USER guest tolmoon tolsun :Ronnie Regan\r\n",
+                    'tail' => 'NICK :Wiz',
+                ),
+            ),
+
+            // PASS command
+            array(
+                "PASS :secretpasswordhere\r\n",
+                array(
+                    'command' => 'PASS',
+                    'params' => array(
+                        'password' => 'secretpasswordhere',
+                        'all' => 'secretpasswordhere',
+                    ),
+                    'targets' => array('secretpasswordhere'),
+                ),
+            ),
+
+            // NICK command
+            array(
+                "NICK :Wiz\r\n",
+                array(
+                    'command' => 'NICK',
+                    'params' => array(
+                        'nickname' => 'Wiz',
+                        'all' => 'Wiz',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            ),
+
+            array(
+                "NICK Wiz :1\r\n",
+                array(
+                    'command' => 'NICK',
+                    'params' => array(
+                        'nickname' => 'Wiz',
+                        'hopcount' => '1',
+                        'all' => 'Wiz :1',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            ),
+
+            array(
+                ":WiZ NICK :Kilroy\r\n",
+                array(
+                    'prefix' => ':WiZ',
+                    'nick' => 'WiZ',
+                    'command' => 'NICK',
+                    'params' => array(
+                        'nickname' => 'Kilroy',
+                        'all' => 'Kilroy',
+                    ),
+                    'targets' => array('Kilroy'),
+                ),
+            ),
+
+            // USER
+            array(
+                "USER guest tolmoon tolsun :Ronnie Regan\r\n",
+                array(
+                    'command' => 'USER',
+                    'params' => array(
+                        'username' => 'guest',
+                        'hostname' => 'tolmoon',
+                        'servername' => 'tolsun',
+                        'realname' => 'Ronnie Regan',
+                        'all' => 'guest tolmoon tolsun :Ronnie Regan',
+                    ),
+                    'targets' => array('guest'),
+                ),
+            ),
+
+            array(
+                ":testnick USER guest tolmoon tolsun :Ronnie Regan\r\n",
+                array(
+                    'prefix' => ':testnick',
+                    'nick' => 'testnick',
+                    'command' => 'USER',
+                    'params' => array(
+                        'hostname' => 'tolmoon',
+                        'realname' => 'Ronnie Regan',
+                        'servername' => 'tolsun',
+                        'username' => 'guest',
+                        'all' => 'guest tolmoon tolsun :Ronnie Regan',
+                    ),
+                    'targets' => array('guest'),
+                ),
+            ),
+
+            // SERVER
+            array(
+                "SERVER test.oulu.fi 1 :[tolsun.oulu.fi] Experimental server\r\n",
+                array(
+                    'command' => 'SERVER',
+                    'params' => array(
+                        'servername' => 'test.oulu.fi',
+                        'hopcount' => '1',
+                        'info' => '[tolsun.oulu.fi] Experimental server',
+                        'all' => 'test.oulu.fi 1 :[tolsun.oulu.fi] Experimental server',
+                    ),
+                ),
+            ),
+
+            array(
+                ":tolsun.oulu.fi SERVER csd.bu.edu 5 :BU Central Server\r\n",
+                array(
+                    'prefix' => ':tolsun.oulu.fi',
+                    'servername' => 'tolsun.oulu.fi',
+                    'command' => 'SERVER',
+                    'params' => array(
+                        'servername' => 'csd.bu.edu',
+                        'hopcount' => '5',
+                        'info' => 'BU Central Server',
+                        'all' => 'csd.bu.edu 5 :BU Central Server',
+                    ),
+                ),
+            ),
+
+            // OPER
+            array(
+                "OPER foo :bar\r\n",
+                array(
+                    'command' => 'OPER',
+                    'params' => array(
+                        'user' => 'foo',
+                        'password' => 'bar',
+                        'all' => 'foo :bar',
+                    ),
+                    'targets' => array('foo'),
+                ),
+            ),
+
+            // QUIT
+            array(
+                "QUIT\r\n",
+                array(
+                    'command' => 'QUIT',
+                ),
+            ),
+
+            array(
+                "QUIT :Gone to have lunch\r\n",
+                array(
+                    'command' => 'QUIT',
+                    'params' => array(
+                        'message' => 'Gone to have lunch',
+                        'all' => 'Gone to have lunch',
+                    ),
+                ),
+            ),
+
+            // SQUIT
+            array(
+                "SQUIT tolsun.oulu.fi :Bad Link ?\r\n",
+                array(
+                    'command' => 'SQUIT',
+                    'params' => array(
+                        'server' => 'tolsun.oulu.fi',
+                        'comment' => 'Bad Link ?',
+                        'all' => 'tolsun.oulu.fi :Bad Link ?',
+                    ),
+                ),
+            ),
+
+            array(
+                ":Trillian SQUIT cm22.eng.umd.edu :Server out of control\r\n",
+                array(
+                    'prefix' => ':Trillian',
+                    'nick' => 'Trillian',
+                    'command' => 'SQUIT',
+                    'params' => array(
+                        'server' => 'cm22.eng.umd.edu',
+                        'comment' => 'Server out of control',
+                        'all' => 'cm22.eng.umd.edu :Server out of control',
+                    ),
+                ),
+            ),
+
+            // JOIN
+            array(
+                "JOIN :#foobar\r\n",
+                array(
+                    'command' => 'JOIN',
+                    'params' => array(
+                        'channels' => '#foobar',
+                        'all' => '#foobar',
+                    ),
+                    'targets' => array('#foobar'),
+                ),
+            ),
+
+            array(
+                "JOIN &foo :fubar\r\n",
+                array(
+                    'command' => 'JOIN',
+                    'params' => array(
+                        'channels' => '&foo',
+                        'keys' => 'fubar',
+                        'all' => '&foo :fubar',
+                    ),
+                    'targets' => array('&foo'),
+                ),
+            ),
+
+            array(
+                "JOIN #foo,&bar :fubar\r\n",
+                array(
+                    'command' => 'JOIN',
+                    'params' => array(
+                        'channels' => '#foo,&bar',
+                        'keys' => 'fubar',
+                        'all' => '#foo,&bar :fubar',
+                    ),
+                    'targets' => array('#foo', '&bar'),
+                ),
+            ),
+
+            array(
+                "JOIN #foo,#bar :fubar,foobar\r\n",
+                array(
+                    'command' => 'JOIN',
+                    'params' => array(
+                        'channels' => '#foo,#bar',
+                        'keys' => 'fubar,foobar',
+                        'all' => '#foo,#bar :fubar,foobar',
+                    ),
+                    'targets' => array('#foo', '#bar'),
+                ),
+            ),
+
+            array(
+                "JOIN :#foo,#bar\r\n",
+                array(
+                    'command' => 'JOIN',
+                    'params' => array(
+                        'channels' => '#foo,#bar',
+                        'all' => '#foo,#bar',
+                    ),
+                    'targets' => array('#foo', '#bar'),
+                ),
+            ),
+
+            array(
+                ":WiZ JOIN :#Twilight_zone\r\n",
+                array(
+                    'prefix' => ':WiZ',
+                    'nick' => 'WiZ',
+                    'command' => 'JOIN',
+                    'params' => array(
+                        'channels' => '#Twilight_zone',
+                        'all' => '#Twilight_zone',
+                    ),
+                    'targets' => array('#Twilight_zone'),
+                ),
+            ),
+
+            // PART
+            array(
+                "PART :#twilight_zone\r\n",
+                array(
+                    'command' => 'PART',
+                    'params' => array(
+                        'channels' => '#twilight_zone',
+                        'all' => '#twilight_zone',
+                    ),
+                    'targets' => array('#twilight_zone'),
+                ),
+            ),
+
+            array(
+                "PART :#oz-ops,&group5\r\n",
+                array(
+                    'command' => 'PART',
+                    'params' => array(
+                        'channels' => '#oz-ops,&group5',
+                        'all' => '#oz-ops,&group5',
+                    ),
+                    'targets' => array('#oz-ops', '&group5'),
+                ),
+            ),
+
+            // MODE
+            array(
+                "MODE #Finnish :+im\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#Finnish',
+                        'mode' => '+im',
+                        'all' => '#Finnish :+im',
+                    ),
+                    'targets' => array('#Finnish'),
+                ),
+            ),
+
+            array(
+                "MODE #Finnish +o :Kilroy\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#Finnish',
+                        'mode' => '+o',
+                        'user' => 'Kilroy',
+                        'all' => '#Finnish +o :Kilroy',
+                    ),
+                    'targets' => array('#Finnish'),
+                ),
+            ),
+
+            array(
+                "MODE #Finnish +v :Wiz\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#Finnish',
+                        'mode' => '+v',
+                        'user' => 'Wiz',
+                        'all' => '#Finnish +v :Wiz',
+                    ),
+                    'targets' => array('#Finnish'),
+                ),
+            ),
+
+            array(
+                "MODE #Fins :-s\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#Fins',
+                        'mode' => '-s',
+                        'all' => '#Fins :-s',
+                    ),
+                    'targets' => array('#Fins'),
+                ),
+            ),
+
+            array(
+                "MODE #42 +k :oulu\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#42',
+                        'mode' => '+k',
+                        'key' => 'oulu',
+                        'all' => '#42 +k :oulu',
+                    ),
+                    'targets' => array('#42'),
+                ),
+            ),
+
+            array(
+                "MODE #eu-opers +l :10\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#eu-opers',
+                        'mode' => '+l',
+                        'limit' => '10',
+                        'all' => '#eu-opers +l :10',
+                    ),
+                    'targets' => array('#eu-opers'),
+                ),
+            ),
+
+            array(
+                "MODE &oulu :+b\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '&oulu',
+                        'mode' => '+b',
+                        'all' => '&oulu :+b',
+                    ),
+                    'targets' => array('&oulu'),
+                ),
+            ),
+
+            array(
+                "MODE &oulu +b :*!*@*\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '&oulu',
+                        'mode' => '+b',
+                        'banmask' => '*!*@*',
+                        'all' => '&oulu +b :*!*@*',
+                    ),
+                    'targets' => array('&oulu'),
+                ),
+            ),
+
+            array(
+                "MODE &oulu +b :*!*@*.edu\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '&oulu',
+                        'mode' => '+b',
+                        'banmask' => '*!*@*.edu',
+                        'all' => '&oulu +b :*!*@*.edu',
+                    ),
+                    'targets' => array('&oulu'),
+                ),
+            ),
+
+            array(
+                "MODE Wiz :-w\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'user' => 'Wiz',
+                        'mode' => '-w',
+                        'all' => 'Wiz :-w',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            ),
+
+            array(
+                ":Angel MODE Angel :+i\r\n",
+                array(
+                    'prefix' => ':Angel',
+                    'nick' => 'Angel',
+                    'command' => 'MODE',
+                    'params' => array(
+                        'user' => 'Angel',
+                        'mode' => '+i',
+                        'all' => 'Angel :+i',
+                    ),
+                    'targets' => array('Angel'),
+                ),
+            ),
+
+            array(
+                "MODE Wiz :-o\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'user' => 'Wiz',
+                        'mode' => '-o',
+                        'all' => 'Wiz :-o',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            ),
+
+            // TOPIC
+            array(
+                ":Wiz TOPIC #test :New topic\r\n",
+                array(
+                    'prefix' => ':Wiz',
+                    'nick' => 'Wiz',
+                    'command' => 'TOPIC',
+                    'params' => array(
+                        'channel' => '#test',
+                        'topic' => 'New topic',
+                        'all' => '#test :New topic',
+                    ),
+                    'targets' => array('#test'),
+                ),
+            ),
+
+            array(
+                "TOPIC #test :another topic\r\n",
+                array(
+                    'command' => 'TOPIC',
+                    'params' => array(
+                        'channel' => '#test',
+                        'topic' => 'another topic',
+                        'all' => '#test :another topic',
+                    ),
+                    'targets' => array('#test'),
+                ),
+            ),
+
+            array(
+                "TOPIC :#test\r\n",
+                array(
+                    'command' => 'TOPIC',
+                    'params' => array(
+                        'channel' => '#test',
+                        'all' => '#test',
+                    ),
+                    'targets' => array('#test'),
+                ),
+            ),
+
+            // NAMES
+            array(
+                "NAMES :#twilight_zone,#42\r\n",
+                array(
+                    'command' => 'NAMES',
+                    'params' => array(
+                        'channels' => '#twilight_zone,#42',
+                        'all' => '#twilight_zone,#42',
+                    ),
+                    'targets' => array('#twilight_zone', '#42'),
+                ),
+            ),
+
+            array(
+                "NAMES\r\n",
+                array(
+                    'command' => 'NAMES',
+                ),
+            ),
+
+            // LIST
+            array(
+                "LIST\r\n",
+                array(
+                    'command' => 'LIST',
+                ),
+            ),
+
+            array(
+                "LIST :#twilight_zone,#42\r\n",
+                array(
+                    'command' => 'LIST',
+                    'params' => array(
+                        'channels' => '#twilight_zone,#42',
+                        'all' => '#twilight_zone,#42',
+                    ),
+                    'targets' => array('#twilight_zone', '#42'),
+                ),
+            ),
+
+            // INVITE
+            array(
+                ":Angel INVITE Wiz :#Dust\r\n",
+                array(
+                    'prefix' => ':Angel',
+                    'nick' => 'Angel',
+                    'command' => 'INVITE',
+                    'params' => array(
+                        'nickname' => 'Wiz',
+                        'channel' => '#Dust',
+                        'all' => 'Wiz :#Dust',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            ),
+
+            array(
+                "INVITE Wiz :#Twilight_Zone\r\n",
+                array(
+                    'command' => 'INVITE',
+                    'params' => array(
+                        'nickname' => 'Wiz',
+                        'channel' => '#Twilight_Zone',
+                        'all' => 'Wiz :#Twilight_Zone',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            ),
+
+            // KICK
+            array(
+                "KICK &Melbourne :Matthew\r\n",
+                array(
+                    'command' => 'KICK',
+                    'params' => array(
+                        'channel' => '&Melbourne',
+                        'user' => 'Matthew',
+                        'all' => '&Melbourne :Matthew',
+                    ),
+                    'targets' => array('&Melbourne'),
+                ),
+            ),
+
+            array(
+                "KICK #Finnish John :Speaking English\r\n",
+                array(
+                    'command' => 'KICK',
+                    'params' => array(
+                        'channel' => '#Finnish',
+                        'user' => 'John',
+                        'comment' => 'Speaking English',
+                        'all' => '#Finnish John :Speaking English',
+                    ),
+                    'targets' => array('#Finnish'),
+                ),
+            ),
+
+            array(
+                ":WiZ KICK #Finnish :John\r\n",
+                array(
+                    'prefix' => ':WiZ',
+                    'nick' => 'WiZ',
+                    'command' => 'KICK',
+                    'params' => array(
+                        'channel' => '#Finnish',
+                        'user' => 'John',
+                        'all' => '#Finnish :John',
+                    ),
+                    'targets' => array('#Finnish'),
+                ),
+            ),
+
+            // VERSION
+            array(
+                ":Wiz VERSION :*.se\r\n",
+                array(
+                    'prefix' => ':Wiz',
+                    'nick' => 'Wiz',
+                    'command' => 'VERSION',
+                    'params' => array(
+                        'server' => '*.se',
+                        'all' => '*.se',
+                    ),
+                ),
+            ),
+
+            array(
+                "VERSION :tolsun.oulu.fi\r\n",
+                array(
+                    'command' => 'VERSION',
+                    'params' => array(
+                        'server' => 'tolsun.oulu.fi',
+                        'all' => 'tolsun.oulu.fi',
+                    ),
+                ),
+            ),
+
+            // STATS
+            array(
+                "STATS :m\r\n",
+                array(
+                    'command' => 'STATS',
+                    'params' => array(
+                        'query' => 'm',
+                        'all' => 'm',
+                    ),
+                    'targets' => array('m'),
+                ),
+            ),
+
+            array(
+                ":Wiz STATS c :eff.org\r\n",
+                array(
+                    'prefix' => ':Wiz',
+                    'nick' => 'Wiz',
+                    'command' => 'STATS',
+                    'params' => array(
+                        'query' => 'c',
+                        'server' => 'eff.org',
+                        'all' => 'c :eff.org',
+                    ),
+                    'targets' => array('c'),
+                ),
+            ),
+
+            // LINKS
+            array(
+                "LINKS :*.au\r\n",
+                array(
+                    'command' => 'LINKS',
+                    'params' => array(
+                        'servermask' => '*.au',
+                        'all' => '*.au',
+                    ),
+                ),
+            ),
+
+            array(
+                ":WiZ LINKS *.bu.edu :*.edu\r\n",
+                array(
+                    'prefix' => ':WiZ',
+                    'nick' => 'WiZ',
+                    'command' => 'LINKS',
+                    'params' => array(
+                        'remoteserver' => '*.bu.edu',
+                        'servermask' => '*.edu',
+                        'all' => '*.bu.edu :*.edu',
+                    ),
+                ),
+            ),
+
+            // TIME
+            array(
+                "TIME :tolsun.oulu.fi\r\n",
+                array(
+                    'command' => 'TIME',
+                    'params' => array(
+                        'server' => 'tolsun.oulu.fi',
+                        'all' => 'tolsun.oulu.fi',
+                    ),
+                ),
+            ),
+
+            array(
+                ":Angel TIME :*.au\r\n",
+                array(
+                    'prefix' => ':Angel',
+                    'nick' => 'Angel',
+                    'command' => 'TIME',
+                    'params' => array(
+                        'server' => '*.au',
+                        'all' => '*.au',
+                    ),
+                ),
+            ),
+
+            // CONNECT
+            array(
+                "CONNECT :tolsun.oulu.fi\r\n",
+                array(
+                    'command' => 'CONNECT',
+                    'params' => array(
+                        'targetserver' => 'tolsun.oulu.fi',
+                        'all' => 'tolsun.oulu.fi',
+                    ),
+                ),
+            ),
+
+            array(
+                ":WiZ CONNECT eff.org 6667 :csd.bu.edu\r\n",
+                array(
+                    'prefix' => ':WiZ',
+                    'nick' => 'WiZ',
+                    'command' => 'CONNECT',
+                    'params' => array(
+                        'targetserver' => 'eff.org',
+                        'port' => '6667',
+                        'remoteserver' => 'csd.bu.edu',
+                        'all' => 'eff.org 6667 :csd.bu.edu',
+                    ),
+                ),
+            ),
+
+            // TRACE
+            array(
+                "TRACE :*.oulu.fi\r\n",
+                array(
+                    'command' => 'TRACE',
+                    'params' => array(
+                        'server' => '*.oulu.fi',
+                        'all' => '*.oulu.fi',
+                    ),
+                ),
+            ),
+
+            array(
+                ":WiZ TRACE :AngelDust\r\n",
+                array(
+                    'prefix' => ':WiZ',
+                    'nick' => 'WiZ',
+                    'command' => 'TRACE',
+                    'params' => array(
+                        'server' => 'AngelDust',
+                        'all' => 'AngelDust',
+                    ),
+                    'targets' => array('AngelDust'),
+                ),
+            ),
+
+            // ADMIN
+            array(
+                "ADMIN :tolsun.oulu.fi\r\n",
+                array(
+                    'command' => 'ADMIN',
+                    'params' => array(
+                        'server' => 'tolsun.oulu.fi',
+                        'all' => 'tolsun.oulu.fi',
+                    ),
+                ),
+            ),
+
+            array(
+                ":WiZ ADMIN :*.edu\r\n",
+                array(
+                    'prefix' => ':WiZ',
+                    'nick' => 'WiZ',
+                    'command' => 'ADMIN',
+                    'params' => array(
+                        'server' => '*.edu',
+                        'all' => '*.edu',
+                    ),
+                ),
+            ),
+
+            // INFO
+            array(
+                "INFO :csd.bu.edu\r\n",
+                array(
+                    'command' => 'INFO',
+                    'params' => array(
+                        'server' => 'csd.bu.edu',
+                        'all' => 'csd.bu.edu',
+                    ),
+                ),
+            ),
+
+            array(
+                ":Avalon INFO :*.fi\r\n",
+                array(
+                    'prefix' => ':Avalon',
+                    'nick' => 'Avalon',
+                    'command' => 'INFO',
+                    'params' => array(
+                        'server' => '*.fi',
+                        'all' => '*.fi',
+                    ),
+                ),
+            ),
+
+            array(
+                "INFO :Angel\r\n",
+                array(
+                    'command' => 'INFO',
+                    'params' => array(
+                        'server' => 'Angel',
+                        'all' => 'Angel',
+                    ),
+                    'targets' => array('Angel'),
+                ),
+            ),
+
+            // PRIVMSG
+            array(
+                ":Angel PRIVMSG Wiz :Hello are you receiving this message ?\r\n",
+                array(
+                    'prefix' => ':Angel',
+                    'nick' => 'Angel',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'Wiz',
+                        'text' => 'Hello are you receiving this message ?',
+                        'all' => 'Wiz :Hello are you receiving this message ?',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            ),
+
+            array(
+                "PRIVMSG Angel :yes I'm receiving it !receiving it !'u>(768u+1n) .br\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'Angel',
+                        'text' => 'yes I\'m receiving it !receiving it !\'u>(768u+1n) .br',
+                        'all' => 'Angel :yes I\'m receiving it !receiving it !\'u>(768u+1n) .br',
+                    ),
+                    'targets' => array('Angel'),
+                ),
+            ),
+
+            array(
+                "PRIVMSG jto@tolsun.oulu.fi :Hello !\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'jto@tolsun.oulu.fi',
+                        'text' => 'Hello !',
+                        'all' => 'jto@tolsun.oulu.fi :Hello !',
+                    ),
+                    'targets' => array('jto@tolsun.oulu.fi'),
+                ),
+            ),
+
+            array(
+                "PRIVMSG $*.fi :Server tolsun.oulu.fi rebooting.\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => '$*.fi',
+                        'text' => 'Server tolsun.oulu.fi rebooting.',
+                        'all' => '$*.fi :Server tolsun.oulu.fi rebooting.',
+                    ),
+                    'targets' => array('$*.fi'),
+                ),
+            ),
+
+            array(
+                "PRIVMSG #*.edu :NSFNet is undergoing work, expect interruptions\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => '#*.edu',
+                        'text' => 'NSFNet is undergoing work, expect interruptions',
+                        'all' => '#*.edu :NSFNet is undergoing work, expect interruptions',
+                    ),
+                    'targets' => array('#*.edu'),
+                ),
+            ),
+
+            array(
+                "WHO :*.fi\r\n",
+                array(
+                    'command' => 'WHO',
+                    'params' => array(
+                        'name' => '*.fi',
+                        'all' => '*.fi',
+                    ),
+                ),
+            ),
+
+            array(
+                "WHO jto* :o\r\n",
+                array(
+                    'command' => 'WHO',
+                    'params' => array(
+                        'name' => 'jto*',
+                        'o' => 'o',
+                        'all' => 'jto* :o',
+                    ),
+                ),
+            ),
+
+            // WHOIS
+            array(
+                "WHOIS :wiz\r\n",
+                array(
+                    'command' => 'WHOIS',
+                    'params' => array(
+                        'nickmasks' => 'wiz',
+                        'all' => 'wiz',
+                    ),
+                ),
+            ),
+
+            array(
+                "WHOIS eff.org :Trillian\r\n",
+                array(
+                    'command' => 'WHOIS',
+                    'params' => array(
+                        'server' => 'eff.org',
+                        'nickmasks' => 'Trillian',
+                        'all' => 'eff.org :Trillian',
+                    ),
+                ),
+            ),
+
+            // WHOWAS
+            array(
+                "WHOWAS :Wiz\r\n",
+                array(
+                    'command' => 'WHOWAS',
+                    'params' => array(
+                        'nickname' => 'Wiz',
+                        'all' => 'Wiz',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            ),
+
+            array(
+                "WHOWAS Mermaid :9\r\n",
+                array(
+                    'command' => 'WHOWAS',
+                    'params' => array(
+                        'nickname' => 'Mermaid',
+                        'count' => '9',
+                        'all' => 'Mermaid :9',
+                    ),
+                    'targets' => array('Mermaid'),
+                ),
+            ),
+
+            array(
+                "WHOWAS Trillian 1 :*.edu\r\n",
+                array(
+                    'command' => 'WHOWAS',
+                    'params' => array(
+                        'nickname' => 'Trillian',
+                        'count' => '1',
+                        'server' => '*.edu',
+                        'all' => 'Trillian 1 :*.edu',
+                    ),
+                    'targets' => array('Trillian'),
+                ),
+            ),
+
+            // KILL
+            array(
+                "KILL David :(csd.bu.edu <- tolsun.oulu.fi)\r\n",
+                array(
+                    'command' => 'KILL',
+                    'params' => array(
+                        'nickname' => 'David',
+                        'comment' => '(csd.bu.edu <- tolsun.oulu.fi)',
+                        'all' => 'David :(csd.bu.edu <- tolsun.oulu.fi)',
+                    ),
+                    'targets' => array('David'),
+                ),
+            ),
+
+            // PING
+            array(
+                "PING :tolsun.oulu.fi\r\n",
+                array(
+                    'command' => 'PING',
+                    'params' => array(
+                        'server1' => 'tolsun.oulu.fi',
+                        'all' => 'tolsun.oulu.fi',
+                    ),
+                ),
+            ),
+
+            array(
+                "PING :WiZ\r\n",
+                array(
+                    'command' => 'PING',
+                    'params' => array(
+                        'server1' => 'WiZ',
+                        'all' => 'WiZ',
+                    ),
+                    'targets' => array('WiZ'),
+                ),
+            ),
+
+            // PONG
+            array(
+                "PONG csd.bu.edu :tolsun.oulu.fi\r\n",
+                array(
+                    'command' => 'PONG',
+                    'params' => array(
+                        'daemon' => 'csd.bu.edu',
+                        'daemon2' => 'tolsun.oulu.fi',
+                        'all' => 'csd.bu.edu :tolsun.oulu.fi',
+                    ),
+                ),
+            ),
+
+            // ERROR
+            array(
+                "ERROR :Server *.fi already exists\r\n",
+                array(
+                    'command' => 'ERROR',
+                    'params' => array(
+                        'message' => 'Server *.fi already exists',
+                        'all' => 'Server *.fi already exists',
+                    ),
+                ),
+            ),
+
+            array(
+                "NOTICE WiZ :ERROR from csd.bu.edu -- Server *.fi already exists\r\n",
+                array(
+                    'command' => 'NOTICE',
+                    'params' => array(
+                        'nickname' => 'WiZ',
+                        'text' => 'ERROR from csd.bu.edu -- Server *.fi already exists',
+                        'all' => 'WiZ :ERROR from csd.bu.edu -- Server *.fi already exists',
+                    ),
+                    'targets' => array('WiZ'),
+                ),
+            ),
+
+            // AWAY
+            array(
+                "AWAY :Gone to lunch.\r\n",
+                array(
+                    'command' => 'AWAY',
+                    'params' => array(
+                        'message' => 'Gone to lunch.',
+                        'all' => 'Gone to lunch.',
+                    ),
+                ),
+            ),
+
+            array(
+                ":Wiz AWAY\r\n",
+                array(
+                    'prefix' => ':Wiz',
+                    'nick' => 'Wiz',
+                    'command' => 'AWAY',
+                ),
+            ),
+
+            // REHASH
+            array(
+                "REHASH\r\n",
+                array(
+                    'command' => 'REHASH',
+                ),
+            ),
+
+            // SUMMON
+            array(
+                "SUMMON :jto\r\n",
+                array(
+                    'command' => 'SUMMON',
+                    'params' => array(
+                        'user' => 'jto',
+                        'all' => 'jto',
+                    ),
+                    'targets' => array('jto'),
+                ),
+            ),
+
+            array(
+                "SUMMON jto :tolsun.oulu.fi\r\n",
+                array(
+                    'command' => 'SUMMON',
+                    'params' => array(
+                        'user' => 'jto',
+                        'server' => 'tolsun.oulu.fi',
+                        'all' => 'jto :tolsun.oulu.fi',
+                    ),
+                    'targets' => array('jto'),
+                ),
+            ),
+
+            // USERS
+            array(
+                "USERS :eff.org\r\n",
+                array(
+                    'command' => 'USERS',
+                    'params' => array(
+                        'server' => 'eff.org',
+                        'all' => 'eff.org',
+                    ),
+                ),
+            ),
+
+            array(
+                ":John USERS :tolsun.oulu.fi\r\n",
+                array(
+                    'prefix' => ':John',
+                    'nick' => 'John',
+                    'command' => 'USERS',
+                    'params' => array(
+                        'server' => 'tolsun.oulu.fi',
+                        'all' => 'tolsun.oulu.fi',
+                    ),
+                ),
+            ),
+
+            // WALLOPS
+            array(
+                ":csd.bu.edu WALLOPS :Connect '*.uiuc.edu 6667' from Joshua\r\n",
+                array(
+                    'prefix' => ':csd.bu.edu',
+                    'servername' => 'csd.bu.edu',
+                    'command' => 'WALLOPS',
+                    'params' => array(
+                        'text' => 'Connect \'*.uiuc.edu 6667\' from Joshua',
+                        'all' => 'Connect \'*.uiuc.edu 6667\' from Joshua',
+                    ),
+                ),
+            ),
+
+            // USERHOST
+            array(
+                "USERHOST Wiz Michael Marty :p\r\n",
+                array(
+                    'command' => 'USERHOST',
+                    'params' => array(
+                        'nickname1' => 'Wiz',
+                        'nickname2' => 'Michael',
+                        'nickname3' => 'Marty',
+                        'nickname4' => 'p',
+                        'all' => 'Wiz Michael Marty :p',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            ),
+
+            // ISON
+            array(
+                "ISON :phone trillian WiZ jarlek Avalon Angel Monstah\r\n",
+                array(
+                    'command' => 'ISON',
+                    'params' => array(
+                        'nicknames' => 'phone trillian WiZ jarlek Avalon Angel Monstah',
+                        'all' => 'phone trillian WiZ jarlek Avalon Angel Monstah',
+                    ),
+                ),
+            ),
+
+            // Responses
+            array(
+				"401\r\n",
+				array(
+					'command' => '401',
+					'code' => 'ERR_NOSUCHNICK',
+				),
+			),
+            array(
+				"402\r\n",
+				array(
+					'command' => '402',
+					'code' => 'ERR_NOSUCHSERVER',
+				),
+			),
+            array(
+				"403\r\n",
+				array(
+					'command' => '403',
+					'code' => 'ERR_NOSUCHCHANNEL',
+				),
+			),
+            array(
+				"404\r\n",
+				array(
+					'command' => '404',
+					'code' => 'ERR_CANNOTSENDTOCHAN',
+				),
+			),
+            array(
+				"405\r\n",
+				array(
+					'command' => '405',
+					'code' => 'ERR_TOOMANYCHANNELS',
+				),
+			),
+            array(
+				"406\r\n",
+				array(
+					'command' => '406',
+					'code' => 'ERR_WASNOSUCHNICK',
+				),
+			),
+            array(
+				"407\r\n",
+				array(
+					'command' => '407',
+					'code' => 'ERR_TOOMANYTARGETS',
+				),
+			),
+            array(
+				"409\r\n",
+				array(
+					'command' => '409',
+					'code' => 'ERR_NOORIGIN',
+				),
+			),
+            array(
+				"411\r\n",
+				array(
+					'command' => '411',
+					'code' => 'ERR_NORECIPIENT',
+				),
+			),
+            array(
+				"412\r\n",
+				array(
+					'command' => '412',
+					'code' => 'ERR_NOTEXTTOSEND',
+				),
+			),
+            array(
+				"413\r\n",
+				array(
+					'command' => '413',
+					'code' => 'ERR_NOTOPLEVEL',
+				),
+			),
+            array(
+				"414\r\n",
+				array(
+					'command' => '414',
+					'code' => 'ERR_WILDTOPLEVEL',
+				),
+			),
+            array(
+				"421\r\n",
+				array(
+					'command' => '421',
+					'code' => 'ERR_UNKNOWNCOMMAND',
+				),
+			),
+            array(
+				"422\r\n",
+				array(
+					'command' => '422',
+					'code' => 'ERR_NOMOTD',
+				),
+			),
+            array(
+				"423\r\n",
+				array(
+					'command' => '423',
+					'code' => 'ERR_NOADMININFO',
+				),
+			),
+            array(
+				"424\r\n",
+				array(
+					'command' => '424',
+					'code' => 'ERR_FILEERROR',
+				),
+			),
+            array(
+				"431\r\n",
+				array(
+					'command' => '431',
+					'code' => 'ERR_NONICKNAMEGIVEN',
+				),
+			),
+            array(
+				"432\r\n",
+				array(
+					'command' => '432',
+					'code' => 'ERR_ERRONEUSNICKNAME',
+				),
+			),
+            array(
+				"433\r\n",
+				array(
+					'command' => '433',
+					'code' => 'ERR_NICKNAMEINUSE',
+				),
+			),
+            array(
+				"436\r\n",
+				array(
+					'command' => '436',
+					'code' => 'ERR_NICKCOLLISION',
+				),
+			),
+            array(
+				"441\r\n",
+				array(
+					'command' => '441',
+					'code' => 'ERR_USERNOTINCHANNEL',
+				),
+			),
+            array(
+				"442\r\n",
+				array(
+					'command' => '442',
+					'code' => 'ERR_NOTONCHANNEL',
+				),
+			),
+            array(
+				"443\r\n",
+				array(
+					'command' => '443',
+					'code' => 'ERR_USERONCHANNEL',
+				),
+			),
+            array(
+				"444\r\n",
+				array(
+					'command' => '444',
+					'code' => 'ERR_NOLOGIN',
+				),
+			),
+            array(
+				"445\r\n",
+				array(
+					'command' => '445',
+					'code' => 'ERR_SUMMONDISABLED',
+				),
+			),
+            array(
+				"446\r\n",
+				array(
+					'command' => '446',
+					'code' => 'ERR_USERSDISABLED',
+				),
+			),
+            array(
+				"451\r\n",
+				array(
+					'command' => '451',
+					'code' => 'ERR_NOTREGISTERED',
+				),
+			),
+            array(
+				"461\r\n",
+				array(
+					'command' => '461',
+					'code' => 'ERR_NEEDMOREPARAMS',
+				),
+			),
+            array(
+				"462\r\n",
+				array(
+					'command' => '462',
+					'code' => 'ERR_ALREADYREGISTRED',
+				),
+			),
+            array(
+				"463\r\n",
+				array(
+					'command' => '463',
+					'code' => 'ERR_NOPERMFORHOST',
+				),
+			),
+            array(
+				"464\r\n",
+				array(
+					'command' => '464',
+					'code' => 'ERR_PASSWDMISMATCH',
+				),
+			),
+            array(
+				"465\r\n",
+				array(
+					'command' => '465',
+					'code' => 'ERR_YOUREBANNEDCREEP',
+				),
+			),
+            array(
+				"467\r\n",
+				array(
+					'command' => '467',
+					'code' => 'ERR_KEYSET',
+				),
+			),
+            array(
+				"471\r\n",
+				array(
+					'command' => '471',
+					'code' => 'ERR_CHANNELISFULL',
+				),
+			),
+            array(
+				"472\r\n",
+				array(
+					'command' => '472',
+					'code' => 'ERR_UNKNOWNMODE',
+				),
+			),
+            array(
+				"473\r\n",
+				array(
+					'command' => '473',
+					'code' => 'ERR_INVITEONLYCHAN',
+				),
+			),
+            array(
+				"474\r\n",
+				array(
+					'command' => '474',
+					'code' => 'ERR_BANNEDFROMCHAN',
+				),
+			),
+            array(
+				"475\r\n",
+				array(
+					'command' => '475',
+					'code' => 'ERR_BADCHANNELKEY',
+				),
+			),
+            array(
+				"481\r\n",
+				array(
+					'command' => '481',
+					'code' => 'ERR_NOPRIVILEGES',
+				),
+			),
+            array(
+				"482\r\n",
+				array(
+					'command' => '482',
+					'code' => 'ERR_CHANOPRIVSNEEDED',
+				),
+			),
+            array(
+				"483\r\n",
+				array(
+					'command' => '483',
+					'code' => 'ERR_CANTKILLSERVER',
+				),
+			),
+            array(
+				"491\r\n",
+				array(
+					'command' => '491',
+					'code' => 'ERR_NOOPERHOST',
+				),
+			),
+            array(
+				"501\r\n",
+				array(
+					'command' => '501',
+					'code' => 'ERR_UMODEUNKNOWNFLAG',
+				),
+			),
+            array(
+				"502\r\n",
+				array(
+					'command' => '502',
+					'code' => 'ERR_USERSDONTMATCH',
+				),
+			),
+            array(
+				"300\r\n",
+				array(
+					'command' => '300',
+					'code' => 'RPL_NONE',
+				),
+			),
+            array(
+				"302\r\n",
+				array(
+					'command' => '302',
+					'code' => 'RPL_USERHOST',
+				),
+			),
+            array(
+				"303\r\n",
+				array(
+					'command' => '303',
+					'code' => 'RPL_ISON',
+				),
+			),
+            array(
+				"301\r\n",
+				array(
+					'command' => '301',
+					'code' => 'RPL_AWAY',
+				),
+			),
+            array(
+				"305\r\n",
+				array(
+					'command' => '305',
+					'code' => 'RPL_UNAWAY',
+				),
+			),
+            array(
+				"306\r\n",
+				array(
+					'command' => '306',
+					'code' => 'RPL_NOWAWAY',
+				),
+			),
+            array(
+				"311\r\n",
+				array(
+					'command' => '311',
+					'code' => 'RPL_WHOISUSER',
+				),
+			),
+            array(
+				"312\r\n",
+				array(
+					'command' => '312',
+					'code' => 'RPL_WHOISSERVER',
+				),
+			),
+            array(
+				"313\r\n",
+				array(
+					'command' => '313',
+					'code' => 'RPL_WHOISOPERATOR',
+				),
+			),
+            array(
+				"317\r\n",
+				array(
+					'command' => '317',
+					'code' => 'RPL_WHOISIDLE',
+				),
+			),
+            array(
+				"318\r\n",
+				array(
+					'command' => '318',
+					'code' => 'RPL_ENDOFWHOIS',
+				),
+			),
+            array(
+				"319\r\n",
+				array(
+					'command' => '319',
+					'code' => 'RPL_WHOISCHANNELS',
+				),
+			),
+            array(
+				"314\r\n",
+				array(
+					'command' => '314',
+					'code' => 'RPL_WHOWASUSER',
+				),
+			),
+            array(
+				"369\r\n",
+				array(
+					'command' => '369',
+					'code' => 'RPL_ENDOFWHOWAS',
+				),
+			),
+            array(
+				"321\r\n",
+				array(
+					'command' => '321',
+					'code' => 'RPL_LISTSTART',
+				),
+			),
+            array(
+				"322\r\n",
+				array(
+					'command' => '322',
+					'code' => 'RPL_LIST',
+				),
+			),
+            array(
+				"323\r\n",
+				array(
+					'command' => '323',
+					'code' => 'RPL_LISTEND',
+				),
+			),
+            array(
+				"324\r\n",
+				array(
+					'command' => '324',
+					'code' => 'RPL_CHANNELMODEIS',
+				),
+			),
+            array(
+				"331\r\n",
+				array(
+					'command' => '331',
+					'code' => 'RPL_NOTOPIC',
+				),
+			),
+            array(
+				"332\r\n",
+				array(
+					'command' => '332',
+					'code' => 'RPL_TOPIC',
+				),
+			),
+            array(
+				"341\r\n",
+				array(
+					'command' => '341',
+					'code' => 'RPL_INVITING',
+				),
+			),
+            array(
+				"342\r\n",
+				array(
+					'command' => '342',
+					'code' => 'RPL_SUMMONING',
+				),
+			),
+            array(
+				"351\r\n",
+				array(
+					'command' => '351',
+					'code' => 'RPL_VERSION',
+				),
+			),
+            array(
+				"352\r\n",
+				array(
+					'command' => '352',
+					'code' => 'RPL_WHOREPLY',
+				),
+			),
+            array(
+				"315\r\n",
+				array(
+					'command' => '315',
+					'code' => 'RPL_ENDOFWHO',
+				),
+			),
+            array(
+				"353\r\n",
+				array(
+					'command' => '353',
+					'code' => 'RPL_NAMREPLY',
+				),
+			),
+            array(
+				"366\r\n",
+				array(
+					'command' => '366',
+					'code' => 'RPL_ENDOFNAMES',
+				),
+			),
+            array(
+				"364\r\n",
+				array(
+					'command' => '364',
+					'code' => 'RPL_LINKS',
+				),
+			),
+            array(
+				"365\r\n",
+				array(
+					'command' => '365',
+					'code' => 'RPL_ENDOFLINKS',
+				),
+			),
+            array(
+				"367\r\n",
+				array(
+					'command' => '367',
+					'code' => 'RPL_BANLIST',
+				),
+			),
+            array(
+				"368\r\n",
+				array(
+					'command' => '368',
+					'code' => 'RPL_ENDOFBANLIST',
+				),
+			),
+            array(
+				"371\r\n",
+				array(
+					'command' => '371',
+					'code' => 'RPL_INFO',
+				),
+			),
+            array(
+				"374\r\n",
+				array(
+					'command' => '374',
+					'code' => 'RPL_ENDOFINFO',
+				),
+			),
+            array(
+				"375\r\n",
+				array(
+					'command' => '375',
+					'code' => 'RPL_MOTDSTART',
+				),
+			),
+            array(
+				"372\r\n",
+				array(
+					'command' => '372',
+					'code' => 'RPL_MOTD',
+				),
+			),
+            array(
+				"376\r\n",
+				array(
+					'command' => '376',
+					'code' => 'RPL_ENDOFMOTD',
+				),
+			),
+            array(
+				"381\r\n",
+				array(
+					'command' => '381',
+					'code' => 'RPL_YOUREOPER',
+				),
+			),
+            array(
+				"382\r\n",
+				array(
+					'command' => '382',
+					'code' => 'RPL_REHASHING',
+				),
+			),
+            array(
+				"391\r\n",
+				array(
+					'command' => '391',
+					'code' => 'RPL_TIME',
+				),
+			),
+            array(
+				"392\r\n",
+				array(
+					'command' => '392',
+					'code' => 'RPL_USERSSTART',
+				),
+			),
+            array(
+				"393\r\n",
+				array(
+					'command' => '393',
+					'code' => 'RPL_USERS',
+				),
+			),
+            array(
+				"394\r\n",
+				array(
+					'command' => '394',
+					'code' => 'RPL_ENDOFUSERS',
+				),
+			),
+            array(
+				"395\r\n",
+				array(
+					'command' => '395',
+					'code' => 'RPL_NOUSERS',
+				),
+			),
+            array(
+				"200\r\n",
+				array(
+					'command' => '200',
+					'code' => 'RPL_TRACELINK',
+				),
+			),
+            array(
+				"201\r\n",
+				array(
+					'command' => '201',
+					'code' => 'RPL_TRACECONNECTING',
+				),
+			),
+            array(
+				"202\r\n",
+				array(
+					'command' => '202',
+					'code' => 'RPL_TRACEHANDSHAKE',
+				),
+			),
+            array(
+				"203\r\n",
+				array(
+					'command' => '203',
+					'code' => 'RPL_TRACEUNKNOWN',
+				),
+			),
+            array(
+				"204\r\n",
+				array(
+					'command' => '204',
+					'code' => 'RPL_TRACEOPERATOR',
+				),
+			),
+            array(
+				"205\r\n",
+				array(
+					'command' => '205',
+					'code' => 'RPL_TRACEUSER',
+				),
+			),
+            array(
+				"206\r\n",
+				array(
+					'command' => '206',
+					'code' => 'RPL_TRACESERVER',
+				),
+			),
+            array(
+				"208\r\n",
+				array(
+					'command' => '208',
+					'code' => 'RPL_TRACENEWTYPE',
+				),
+			),
+            array(
+				"261\r\n",
+				array(
+					'command' => '261',
+					'code' => 'RPL_TRACELOG',
+				),
+			),
+            array(
+				"211\r\n",
+				array(
+					'command' => '211',
+					'code' => 'RPL_STATSLINKINFO',
+				),
+			),
+            array(
+				"212\r\n",
+				array(
+					'command' => '212',
+					'code' => 'RPL_STATSCOMMANDS',
+				),
+			),
+            array(
+				"213\r\n",
+				array(
+					'command' => '213',
+					'code' => 'RPL_STATSCLINE',
+				),
+			),
+            array(
+				"214\r\n",
+				array(
+					'command' => '214',
+					'code' => 'RPL_STATSNLINE',
+				),
+			),
+            array(
+				"215\r\n",
+				array(
+					'command' => '215',
+					'code' => 'RPL_STATSILINE',
+				),
+			),
+            array(
+				"216\r\n",
+				array(
+					'command' => '216',
+					'code' => 'RPL_STATSKLINE',
+				),
+			),
+            array(
+				"218\r\n",
+				array(
+					'command' => '218',
+					'code' => 'RPL_STATSYLINE',
+				),
+			),
+            array(
+				"219\r\n",
+				array(
+					'command' => '219',
+					'code' => 'RPL_ENDOFSTATS',
+				),
+			),
+            array(
+				"241\r\n",
+				array(
+					'command' => '241',
+					'code' => 'RPL_STATSLLINE',
+				),
+			),
+            array(
+				"242\r\n",
+				array(
+					'command' => '242',
+					'code' => 'RPL_STATSUPTIME',
+				),
+			),
+            array(
+				"243\r\n",
+				array(
+					'command' => '243',
+					'code' => 'RPL_STATSOLINE',
+				),
+			),
+            array(
+				"244\r\n",
+				array(
+					'command' => '244',
+					'code' => 'RPL_STATSHLINE',
+				),
+			),
+            array(
+				"221\r\n",
+				array(
+					'command' => '221',
+					'code' => 'RPL_UMODEIS',
+				),
+			),
+            array(
+				"251\r\n",
+				array(
+					'command' => '251',
+					'code' => 'RPL_LUSERCLIENT',
+				),
+			),
+            array(
+				"252\r\n",
+				array(
+					'command' => '252',
+					'code' => 'RPL_LUSEROP',
+				),
+			),
+            array(
+				"253\r\n",
+				array(
+					'command' => '253',
+					'code' => 'RPL_LUSERUNKNOWN',
+				),
+			),
+            array(
+				"254\r\n",
+				array(
+					'command' => '254',
+					'code' => 'RPL_LUSERCHANNELS',
+				),
+			),
+            array(
+				"255\r\n",
+				array(
+					'command' => '255',
+					'code' => 'RPL_LUSERME',
+				),
+			),
+            array(
+				"256\r\n",
+				array(
+					'command' => '256',
+					'code' => 'RPL_ADMINME',
+				),
+			),
+            array(
+				"257\r\n",
+				array(
+					'command' => '257',
+					'code' => 'RPL_ADMINLOC1',
+				),
+			),
+            array(
+				"258\r\n",
+				array(
+					'command' => '258',
+					'code' => 'RPL_ADMINLOC2',
+				),
+			),
+            array(
+				"259\r\n",
+				array(
+					'command' => '259',
+					'code' => 'RPL_ADMINEMAIL',
+				),
+			),
+            array(
+                "999\r\n",
+                array(
+                    'command' => '999',
+                    'code' => 'Unknown reply',
+                ),
+            ),
+        );
+
+        foreach ($data as $key => $value) {
+            // Assume the string to parse contains the whole message for those
+            // that don't explicitly specify that the two are different
+            if (is_array($value[1]) && !isset($value[1]['message'])) {
+                $value[1]['message'] = $value[0];
+            }
+
+            // Add data sets for NOTICE equivalent to those for PRIVMSG
+            if (strpos($value[0], 'PRIVMSG ') === 0) {
+                $copy = $value;
+                $copy[0] = substr_replace($copy[0], 'NOTICE', 0, 7);
+                $copy[1]['message'] = substr_replace($copy[1]['message'], 'NOTICE', 0, 7);
+                $copy[1]['command'] = 'NOTICE';
+                $copy[1]['params']['nickname'] = $copy[1]['params']['receivers'];
+                unset($copy[1]['params']['receivers']);
+                $data[] = $copy;
+            }
+
+            $data[$key] = $value;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Data provider for testParseAll().
+     *
+     * @return array
+     */
+    public function dataProviderTestParseAll()
+    {
+        $message1 = array(
+            'string' => ":Angel PRIVMSG Wiz :Hello are you receiving this message ?",
+            'parsed' => array(
+                    'prefix' => ':Angel',
+                    'nick' => 'Angel',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'Wiz',
+                        'text' => 'Hello are you receiving this message ?',
+                        'all' => 'Wiz :Hello are you receiving this message ?',
+                    ),
+                    'targets' => array('Wiz'),
+                ),
+            );
+
+        $message2 = array(
+            'string' => "PRIVMSG Angel :yes I'm receiving it !receiving it !'u>(768u+1n) .br",
+            'parsed' => array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'Angel',
+                        'text' => 'yes I\'m receiving it !receiving it !\'u>(768u+1n) .br',
+                        'all' => 'Angel :yes I\'m receiving it !receiving it !\'u>(768u+1n) .br',
+                    ),
+                    'targets' => array('Angel'),
+                ),
+            );
+
+        $data = array();
+
+        // No messages
+        $message = '';
+        $data[] = array($message, array());
+        
+        // One incomplete message
+        $message .= $message1['string'];
+        $data[] = array($message, array());
+
+        // One complete message
+        $message .= "\r\n";
+        $expected = $message1['parsed'];
+        $expected['message'] = $message;
+        unset($expected['tail']);
+        $data[] = array($message, array($expected));
+
+        // One complete message, one incomplete message
+        $message .= $message2['string'];
+        $expected['tail'] = $message2['string'];
+        $data[] = array($message, array($expected));
+
+        // Two complete messages
+        $message .= "\r\n";
+        $message1['parsed']['message'] = $message1['string'] . "\r\n";
+        $message2['parsed']['message'] = $message1['parsed']['tail'] = $message2['string'] . "\r\n";
+        $data[] = array($message, array($message1['parsed'], $message2['parsed']));
+
+        return $data;
+    }
+}
