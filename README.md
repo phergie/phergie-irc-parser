@@ -4,7 +4,7 @@ A PHP-based parser for messages conforming to the IRC protocol as described in [
 
 ## Install
 
-The recommended way to install react is [through composer](http://getcomposer.org).
+The recommended method of installation is [through composer](http://getcomposer.org).
 
 ```JSON
 {
