@@ -2,6 +2,8 @@
 
 A PHP-based parser for messages conforming to the IRC protocol as described in [RFC 1459](http://irchelp.org/irchelp/rfc/rfc.html).
 
+[![Build Status](https://secure.travis-ci.org/phergie/phergie-irc-parser.png?branch=master)](http://travis-ci.org/phergie/phergie-irc-parser)
+
 ## Install
 
 The recommended method of installation is [through composer](http://getcomposer.org).
