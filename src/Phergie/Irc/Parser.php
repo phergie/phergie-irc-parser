@@ -41,8 +41,24 @@ class Parser implements ParserInterface
     protected $channel;
 
     /**
-     * Mapping of commands to corresponding regular expressions for parsing
-     * parameter values for those commands
+     * Regular expression to parse CTCP commands
+     *
+     * @var string
+     * @link http://irchelp.org/irchelp/rfc/ctcpspec.html
+     */
+    protected $ctcp;
+
+    /**
+     * Mapping of CTCP commands to corresponding regular expressions for
+     * parsing parameter values for those commands
+     *
+     * @var array
+     */
+    protected $ctcpParams;
+
+    /**
+     * Mapping of IRC commands to corresponding regular expressions for
+     * parsing parameter values for those commands
      *
      * @var array
      */
@@ -226,8 +242,8 @@ class Parser implements ParserInterface
             'TRACE'    => "/^(?:(?P<server>$trailing)?)$/",
             'ADMIN'    => "/^(?:(?P<server>$trailing)?)$/",
             'INFO'     => "/^(?:(?P<server>$trailing)?)$/",
-            'PRIVMSG'  => "/^(?:(?P<receivers>$middle)(?P<text>$trailing))$/",
-            'NOTICE'   => "/^(?:(?P<nickname>$middle)(?P<text>$trailing))$/",
+            'PRIVMSG'  => "/^(?:(?P<receivers>$middle)(?P<text>$trailing))$/S",
+            'NOTICE'   => "/^(?:(?P<nickname>$middle)(?P<text>$trailing))$/S",
             'WHO'      => "/^(?:(?P<name>$trailing|$middle)(?P<o>$trailing)?)$/",
             'WHOIS'    => "/^(?:(?P<server>$middle)?(?P<nickmasks>$trailing))$/",
             'WHOWAS'   => "/^(?:(?P<nickname>$trailing|$middle)(?P<count>$trailing|$middle)?(?P<server>$trailing)?)$/",
@@ -243,6 +259,21 @@ class Parser implements ParserInterface
             'WALLOPS'  => "/^(?:(?P<text>$trailing))$/",
             'USERHOST' => "/^(?:(?P<nickname1>$trailing|$middle)(?P<nickname2>$trailing|$middle)?(?P<nickname3>$trailing|$middle)?(?P<nickname4>$trailing|$middle)?(?P<nickname5>$trailing)?)$/",
             'ISON'     => "/^(?:(?P<nicknames>(?:$middle )*$trailing))$/",
+        );
+
+        $xdelim = "\001";
+        $middle = "(?:[^:]+)";
+        $trailing = "(?:[^$xdelim]+)";
+        $this->ctcp = "/^$xdelim(?P<command>[^ ]+)(?P<params> [^$xdelim]+)?$xdelim$/S";
+        $this->ctcpParams = array(
+            'FINGER'     => "/^(?::(?P<user>$trailing))?$/",
+            'VERSION'    => "/^(?:(?P<name>$middle):(?P<version>$middle):(?P<environment>$trailing))?$/",
+            'SOURCE'     => "/^(?:(?P<host>$middle):(?P<directories>$middle):(?P<files>$trailing))?$/",
+            'USERINFO'   => "/^(?::(?P<user>$trailing))?$/",
+            'CLIENTINFO' => "/^(?::(?P<client>$trailing))?$/",
+            'ERRMSG'     => "/^(?:(?P<query>.+)(?: :(?P<message>$trailing))?)$/U",
+            'PING'       => "/^(?:(?P<timestamp>$trailing))$/",
+            'TIME'       => "/^(?::(?P<time>$trailing))$/",
         );
     }
 
@@ -277,7 +308,7 @@ class Parser implements ParserInterface
      * Implements ParserInterface::parse().
      *
      * @param string $message Data stream containing the message to parse
-     * @return array|null Associative array containing parsed data if the 
+     * @return array|null Associative array containing parsed data if the
      *         message is successfully parsed, null otherwise
      * @see \Phergie\Irc\ParserInterface::parse()
      */
@@ -305,24 +336,41 @@ class Parser implements ParserInterface
                 $parsed['targets'] = explode(',', $this->strip($targets[0]));
             }
 
-            // Massage MODE-specific parameters because they're an aberration
-            if ($command === 'MODE') {
-                if (preg_match('/^' . $this->channel . '$/', $params['target'])) {
-                    $params['channel'] = $params['target'];
-                    if (preg_match('/[ov]/', $params['mode'])) {
-                        $params['user'] = $params['param'];
-                    } elseif (strpos($params['mode'], 'l') !== false) {
-                        $params['limit'] = $params['param'];
-                    } elseif (strpos($params['mode'], 'b') !== false
-                        && !empty($params['param'])) {
-                        $params['banmask'] = $params['param'];
-                    } elseif (strpos($params['mode'], 'k') !== false) {
-                        $params['key'] = $params['param'];
+            switch ($command) {
+                // Handle MODE-specific parameters
+                case 'MODE':
+                    if (preg_match('/^' . $this->channel . '$/', $params['target'])) {
+                        $params['channel'] = $params['target'];
+                        if (preg_match('/[ov]/', $params['mode'])) {
+                            $params['user'] = $params['param'];
+                        } elseif (strpos($params['mode'], 'l') !== false) {
+                            $params['limit'] = $params['param'];
+                        } elseif (strpos($params['mode'], 'b') !== false
+                            && !empty($params['param'])) {
+                            $params['banmask'] = $params['param'];
+                        } elseif (strpos($params['mode'], 'k') !== false) {
+                            $params['key'] = $params['param'];
+                        }
+                    } else {
+                        $params['user'] = $params['target'];
                     }
-                } else {
-                    $params['user'] = $params['target'];
-                }
-                unset($params['target'], $params['param']);
+                    unset($params['target'], $params['param']);
+                    break;
+                // Handle CTCP messages
+                case 'PRIVMSG':
+                case 'NOTICE':
+                    if ($params && preg_match($this->ctcp, end($params), $ctcp)) {
+                        $parsed['ctcp'] = $this->removeIntegerKeys($ctcp);
+                        if (!empty($parsed['ctcp']['params'])) {
+                            $ctcpParams = ltrim($parsed['ctcp']['params']);
+                            preg_match($this->ctcpParams[$parsed['ctcp']['command']], $ctcpParams, $ctcpParsed);
+                            $parsed['ctcp']['params'] = array_merge(
+                                $this->removeIntegerKeys($ctcpParsed),
+                                array('all' => $ctcpParams)
+                            );
+                        }
+                    }
+                    break;
             }
 
             // Clean up and store the processed parameters
@@ -337,7 +385,7 @@ class Parser implements ParserInterface
             }
         }
 
-        // Remove the extracted message from the data stream
+        // Store the remainder of the original data stream
         $length = strlen($parsed[0]);
         if ($length < strlen($message)) {
             $parsed['tail'] = substr($message, $length);
@@ -353,8 +401,8 @@ class Parser implements ParserInterface
      * Implements ParserInterface::parseAll().
      *
      * @param string $message String containing the message to parse
-     * @return array Enumerated array of associative arrays each containing 
-     *         parsed data for a single message if any messages are 
+     * @return array Enumerated array of associative arrays each containing
+     *         parsed data for a single message if any messages are
      *         successfully parsed, an empty array otherwise
      * @see \Phergie\Irc\ParserInterface::parseAll()
      */
@@ -377,7 +425,7 @@ class Parser implements ParserInterface
      * Implements ParserInterface::consume().
      *
      * @param string $message String containing the message to parse
-     * @return array|null Associative array containing parsed data if a 
+     * @return array|null Associative array containing parsed data if a
      *         message is successfully parsed, null otherwise
      * @see \Phergie\Irc\ParserInterface::consume()
      */
@@ -392,8 +440,8 @@ class Parser implements ParserInterface
      * Implements ParserInterface::consumeAll().
      *
      * @param string $message String containing the message to parse
-     * @return array Enumerated array of associative arrays each containing 
-     *         parsed data for a single message if any messages are 
+     * @return array Enumerated array of associative arrays each containing
+     *         parsed data for a single message if any messages are
      *         successfully parsed, an empty array otherwise
      * @see \Phergie\Irc\ParserInterface::consumeAll()
      */

@@ -84,13 +84,14 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Data provider for testParse().
+     * Data provider for testParse() and testConsume().
      *
      * @return array
      */
     public function dataProviderTestParse()
     {
         $data = array(
+
             // Empty message
             array(
                 '',
@@ -107,7 +108,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 null,
             ),
 
-            // Data past the first message
+            // Data past the first message should be stored as 'tail'
             array(
                 "USER guest tolmoon tolsun :Ronnie Regan\r\nNICK :Wiz",
                 array(
@@ -125,7 +126,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // PASS command
+            // PASS (RFC 1459 Section 4.1.1)
             array(
                 "PASS :secretpasswordhere\r\n",
                 array(
@@ -138,7 +139,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // NICK command
+            // NICK (RFC 1459 Section 4.1.2)
             array(
                 "NICK :Wiz\r\n",
                 array(
@@ -178,7 +179,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // USER
+            // USER (RFC 1459 Section 4.1.3)
             array(
                 "USER guest tolmoon tolsun :Ronnie Regan\r\n",
                 array(
@@ -211,7 +212,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // SERVER
+            // SERVER (RFC 1459 Section 4.1.4)
             array(
                 "SERVER test.oulu.fi 1 :[tolsun.oulu.fi] Experimental server\r\n",
                 array(
@@ -240,7 +241,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // OPER
+            // OPER (RFC 1459 Section 4.1.5)
             array(
                 "OPER foo :bar\r\n",
                 array(
@@ -254,7 +255,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // QUIT
+            // QUIT (RFC 1459 Section 4.1.6)
             array(
                 "QUIT\r\n",
                 array(
@@ -273,7 +274,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // SQUIT
+            // SQUIT (RFC 1459 Section 4.1.7)
             array(
                 "SQUIT tolsun.oulu.fi :Bad Link ?\r\n",
                 array(
@@ -300,7 +301,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // JOIN
+            // JOIN (RFC 1459 Section 4.2.1)
             array(
                 "JOIN :#foobar\r\n",
                 array(
@@ -378,7 +379,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // PART
+            // PART (RFC 1459 Section 4.2.2)
             array(
                 "PART :#twilight_zone\r\n",
                 array(
@@ -403,7 +404,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // MODE
+            // MODE (RFC 1459 Section 4.2.3)
             array(
                 "MODE #Finnish :+im\r\n",
                 array(
@@ -568,7 +569,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // TOPIC
+            // TOPIC (RFC 1459 Section 4.2.4)
             array(
                 ":Wiz TOPIC #test :New topic\r\n",
                 array(
@@ -609,7 +610,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // NAMES
+            // NAMES (RFC 1459 Section 4.2.5)
             array(
                 "NAMES :#twilight_zone,#42\r\n",
                 array(
@@ -629,7 +630,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // LIST
+            // LIST (RFC 1459 Section 4.2.6)
             array(
                 "LIST\r\n",
                 array(
@@ -649,7 +650,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // INVITE
+            // INVITE (RFC 1459 Section 4.2.7)
             array(
                 ":Angel INVITE Wiz :#Dust\r\n",
                 array(
@@ -678,7 +679,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // KICK
+            // KICK (RFC 1459 Section 4.2.8)
             array(
                 "KICK &Melbourne :Matthew\r\n",
                 array(
@@ -721,7 +722,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // VERSION
+            // VERSION (RFC 1459 Section 4.3.1)
             array(
                 ":Wiz VERSION :*.se\r\n",
                 array(
@@ -746,7 +747,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // STATS
+            // STATS (RFC 1459 Section 4.3.2)
             array(
                 "STATS :m\r\n",
                 array(
@@ -774,7 +775,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // LINKS
+            // LINKS (RFC 1459 Section 4.3.3)
             array(
                 "LINKS :*.au\r\n",
                 array(
@@ -800,7 +801,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // TIME
+            // TIME (RFC 1459 Section 4.3.4)
             array(
                 "TIME :tolsun.oulu.fi\r\n",
                 array(
@@ -825,7 +826,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // CONNECT
+            // CONNECT (RFC 1459 Section 4.3.5)
             array(
                 "CONNECT :tolsun.oulu.fi\r\n",
                 array(
@@ -852,7 +853,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // TRACE
+            // TRACE (RFC 1459 Section 4.3.6)
             array(
                 "TRACE :*.oulu.fi\r\n",
                 array(
@@ -878,7 +879,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // ADMIN
+            // ADMIN (RFC 1459 Section 4.3.7)
             array(
                 "ADMIN :tolsun.oulu.fi\r\n",
                 array(
@@ -903,7 +904,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // INFO
+            // INFO (RFC 1459 Section 4.3.8)
             array(
                 "INFO :csd.bu.edu\r\n",
                 array(
@@ -940,7 +941,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // PRIVMSG
+            // PRIVMSG (RFC 1459 Section 4.4.1)
             array(
                 ":Angel PRIVMSG Wiz :Hello are you receiving this message ?\r\n",
                 array(
@@ -1008,6 +1009,11 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            // NOTE: Because of syntactic equivalence, data sets for NOTICE
+            // (RFC 1459 Section 4.4.2) equivalent to those for PRIVMSG are
+            // derived later in this method rather than being duplicated here
+
+            // WHO (RFC 1459 Section 4.5.1)
             array(
                 "WHO :*.fi\r\n",
                 array(
@@ -1031,7 +1037,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // WHOIS
+            // WHOIS (RFC 1459 Section 4.5.2)
             array(
                 "WHOIS :wiz\r\n",
                 array(
@@ -1055,7 +1061,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // WHOWAS
+            // WHOWAS (RFC 1459 Section 4.5.3)
             array(
                 "WHOWAS :Wiz\r\n",
                 array(
@@ -1095,7 +1101,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // KILL
+            // KILL (RFC 1459 Section 4.6.1)
             array(
                 "KILL David :(csd.bu.edu <- tolsun.oulu.fi)\r\n",
                 array(
@@ -1109,7 +1115,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // PING
+            // PING (RFC 1459 Section 4.6.2)
             array(
                 "PING :tolsun.oulu.fi\r\n",
                 array(
@@ -1133,7 +1139,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // PONG
+            // PONG (RFC 1459 Section 4.6.3)
             array(
                 "PONG csd.bu.edu :tolsun.oulu.fi\r\n",
                 array(
@@ -1146,7 +1152,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // ERROR
+            // ERROR (RFC 1459 Section 4.6.4)
             array(
                 "ERROR :Server *.fi already exists\r\n",
                 array(
@@ -1171,7 +1177,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // AWAY
+            // AWAY (RFC 1459 Section 5.1)
             array(
                 "AWAY :Gone to lunch.\r\n",
                 array(
@@ -1192,7 +1198,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // REHASH
+            // REHASH (RFC 1459 Section 5.2)
             array(
                 "REHASH\r\n",
                 array(
@@ -1200,7 +1206,15 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // SUMMON
+            // RESTART (RFC 1459 Section 5.3)
+            array(
+                "RESTART\r\n",
+                array(
+                    'command' => 'RESTART',
+                ),
+            ),
+
+            // SUMMON (RFC 1459 Section 5.4)
             array(
                 "SUMMON :jto\r\n",
                 array(
@@ -1226,7 +1240,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // USERS
+            // USERS (RFC 1459 Section 5.5)
             array(
                 "USERS :eff.org\r\n",
                 array(
@@ -1251,7 +1265,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // WALLOPS
+            // WALLOPS (RFC 1459 Section 5.6)
             array(
                 ":csd.bu.edu WALLOPS :Connect '*.uiuc.edu 6667' from Joshua\r\n",
                 array(
@@ -1265,7 +1279,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // USERHOST
+            // USERHOST (RFC 1459 Section 5.7)
             array(
                 "USERHOST Wiz Michael Marty :p\r\n",
                 array(
@@ -1281,7 +1295,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // ISON
+            // ISON (RFC 1459 Section 5.8)
             array(
                 "ISON :phone trillian WiZ jarlek Avalon Angel Monstah\r\n",
                 array(
@@ -1293,7 +1307,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // Responses
+            // Error replies (RFC 1459 Section 6.1)
             array(
 				"401\r\n",
 				array(
@@ -1602,6 +1616,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 					'code' => 'ERR_USERSDONTMATCH',
 				),
 			),
+
+            // Command responses (RFC 1459 Section 6.2)
             array(
 				"300\r\n",
 				array(
@@ -2127,6 +2143,293 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'code' => 'Unknown reply',
                 ),
             ),
+
+            // FINGER (CTCP Specification)
+            array(
+                "PRIVMSG victim :\001FINGER\001\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'victim',
+                        'text' => "\001FINGER\001",
+                        'all' => "victim :\001FINGER\001",
+                    ),
+                    'targets' => array('victim'),
+                    'ctcp' => array(
+                        'command' => 'FINGER',
+                    ),
+                ),
+            ),
+
+            array(
+                ":victim NOTICE actor :\001FINGER :Please check my USERINFO instead :Klaus Zeuge (sojge@mizar) 1 second has passed since victim gave a command last.\001\r\n",
+                array(
+                    'prefix' => ':victim',
+                    'nick' => 'victim',
+                    'command' => 'NOTICE',
+                    'params' => array(
+                        'nickname' => 'actor',
+                        'text' => "\001FINGER :Please check my USERINFO instead :Klaus Zeuge (sojge@mizar) 1 second has passed since victim gave a command last.\001",
+                        'all' => "actor :\001FINGER :Please check my USERINFO instead :Klaus Zeuge (sojge@mizar) 1 second has passed since victim gave a command last.\001",
+                    ),
+                    'targets' => array('actor'),
+                    'ctcp' => array(
+                        'command' => 'FINGER',
+                        'params' => array(
+                            'user' => 'Please check my USERINFO instead :Klaus Zeuge (sojge@mizar) 1 second has passed since victim gave a command last.',
+                            'all' => ':Please check my USERINFO instead :Klaus Zeuge (sojge@mizar) 1 second has passed since victim gave a command last.'
+                        ),
+                    ),
+                ),
+            ),
+
+            // VERSION (CTCP Specification)
+            array(
+                "PRIVMSG victim :\001VERSION\001\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'victim',
+                        'text' => "\001VERSION\001",
+                        'all' => "victim :\001VERSION\001",
+                    ),
+                    'targets' => array('victim'),
+                    'ctcp' => array(
+                        'command' => 'VERSION',
+                    ),
+                ),
+            ),
+
+            array(
+                ":victim NOTICE actor :\001VERSION Kiwi:5.2:GNU Emacs 18.57.19 under SunOS 4.1.1 on Sun SLC:FTP.Lysator.LiU.SE:/pub/emacs Kiwi-5.2.el.Z Kiwi.README\001\r\n",
+                array(
+                    'prefix' => ':victim',
+                    'nick' => 'victim',
+                    'command' => 'NOTICE',
+                    'params' => array(
+                        'nickname' => 'actor',
+                        'text' => "\001VERSION Kiwi:5.2:GNU Emacs 18.57.19 under SunOS 4.1.1 on Sun SLC:FTP.Lysator.LiU.SE:/pub/emacs Kiwi-5.2.el.Z Kiwi.README\001",
+                        'all' => "actor :\001VERSION Kiwi:5.2:GNU Emacs 18.57.19 under SunOS 4.1.1 on Sun SLC:FTP.Lysator.LiU.SE:/pub/emacs Kiwi-5.2.el.Z Kiwi.README\001",
+                    ),
+                    'targets' => array('actor'),
+                    'ctcp' => array(
+                        'command' => 'VERSION',
+                        'params' => array(
+                            'name' => 'Kiwi',
+                            'version' => '5.2',
+                            'environment' => 'GNU Emacs 18.57.19 under SunOS 4.1.1 on Sun SLC:FTP.Lysator.LiU.SE:/pub/emacs Kiwi-5.2.el.Z Kiwi.README',
+                            'all' => 'Kiwi:5.2:GNU Emacs 18.57.19 under SunOS 4.1.1 on Sun SLC:FTP.Lysator.LiU.SE:/pub/emacs Kiwi-5.2.el.Z Kiwi.README',
+                        ),
+                    ),
+                )
+            ),
+
+            // SOURCE (CTCP Specification)
+            array(
+                "PRIVMSG victim :\001SOURCE cs.bu.edu:/pub/irc:Kiwi.5.2.el.Z\001\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'victim',
+                        'text' => "\001SOURCE cs.bu.edu:/pub/irc:Kiwi.5.2.el.Z\001",
+                        'all' => "victim :\001SOURCE cs.bu.edu:/pub/irc:Kiwi.5.2.el.Z\001",
+                    ),
+                    'targets' => array('victim'),
+                    'ctcp' => array(
+                        'command' => 'SOURCE',
+                        'params' => array(
+                            'host' => 'cs.bu.edu',
+                            'directories' => '/pub/irc',
+                            'files' => 'Kiwi.5.2.el.Z',
+                            'all' => 'cs.bu.edu:/pub/irc:Kiwi.5.2.el.Z',
+                        ),
+                    ),
+                ),
+            ),
+
+            // USERINFO (CTCP Specification)
+            array(
+                "PRIVMSG victim :\001USERINFO\001\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'victim',
+                        'text' => "\001USERINFO\001",
+                        'all' => "victim :\001USERINFO\001",
+                    ),
+                    'targets' => array('victim'),
+                    'ctcp' => array(
+                        'command' => 'USERINFO',
+                    ),
+                ),
+            ),
+
+            array(
+                ":victim NOTICE actor :\001USERINFO :I'm studying computer science in Uppsala, I'm male (somehow, that seems to be an important matter on IRC:-) and I speak fluent swedish, decent german, and some english.\001\r\n",
+                array(
+                    'prefix' => ':victim',
+                    'nick' => 'victim',
+                    'command' => 'NOTICE',
+                    'params' => array(
+                        'nickname' => 'actor',
+                        'text' => "\001USERINFO :I'm studying computer science in Uppsala, I'm male (somehow, that seems to be an important matter on IRC:-) and I speak fluent swedish, decent german, and some english.\001",
+                        'all' => "actor :\001USERINFO :I'm studying computer science in Uppsala, I'm male (somehow, that seems to be an important matter on IRC:-) and I speak fluent swedish, decent german, and some english.\001",
+                    ),
+                    'targets' => array('actor'),
+                    'ctcp' => array(
+                        'command' => 'USERINFO',
+                        'params' => array(
+                            'user' => 'I\'m studying computer science in Uppsala, I\'m male (somehow, that seems to be an important matter on IRC:-) and I speak fluent swedish, decent german, and some english.',
+                            'all' => ':I\'m studying computer science in Uppsala, I\'m male (somehow, that seems to be an important matter on IRC:-) and I speak fluent swedish, decent german, and some english.',
+                        ),
+                    ),
+                ),
+            ),
+
+            // CLIENTINFO (CTCP Specification)
+            array(
+                "PRIVMSG victim :\001CLIENTINFO\001\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'victim',
+                        'text' => "\001CLIENTINFO\001",
+                        'all' => "victim :\001CLIENTINFO\001",
+                    ),
+                    'targets' => array('victim'),
+                    'ctcp' => array(
+                        'command' => 'CLIENTINFO',
+                    ),
+                ),
+            ),
+
+            array(
+                ":victim NOTICE actor :\001CLIENTINFO :You can request help of the commands CLIENTINFO ERRMSG FINGER USERINFO VERSION by giving an argument to CLIENTINFO.\001\r\n",
+                array(
+                    'prefix' => ':victim',
+                    'nick' => 'victim',
+                    'command' => 'NOTICE',
+                    'params' => array(
+                        'nickname' => 'actor',
+                        'text' => "\001CLIENTINFO :You can request help of the commands CLIENTINFO ERRMSG FINGER USERINFO VERSION by giving an argument to CLIENTINFO.\001",
+                        'all' => "actor :\001CLIENTINFO :You can request help of the commands CLIENTINFO ERRMSG FINGER USERINFO VERSION by giving an argument to CLIENTINFO.\001",
+                    ),
+                    'targets' => array('actor'),
+                    'ctcp' => array(
+                        'command' => 'CLIENTINFO',
+                        'params' => array(
+                            'client' => 'You can request help of the commands CLIENTINFO ERRMSG FINGER USERINFO VERSION by giving an argument to CLIENTINFO.',
+                            'all' => ':You can request help of the commands CLIENTINFO ERRMSG FINGER USERINFO VERSION by giving an argument to CLIENTINFO.',
+                        ),
+                    ),
+                ),
+            ),
+
+            // ERRMSG (CTCP Specification)
+            array(
+                ":victim NOTICE actor :\001ERRMSG clientinfo clientinfo :Query is unknown\001\r\n",
+                array(
+                    'prefix' => ':victim',
+                    'nick' => 'victim',
+                    'command' => 'NOTICE',
+                    'params' => array(
+                        'nickname' => 'actor',
+                        'text' => "\001ERRMSG clientinfo clientinfo :Query is unknown\001",
+                        'all' => "actor :\001ERRMSG clientinfo clientinfo :Query is unknown\001",
+                    ),
+                    'targets' => array('actor'),
+                    'ctcp' => array(
+                        'command' => 'ERRMSG',
+                        'params' => array(
+                            'query' => 'clientinfo clientinfo',
+                            'message' => 'Query is unknown',
+                            'all' => 'clientinfo clientinfo :Query is unknown',
+                        ),
+                    ),
+                ),
+            ),
+
+            // PING (CTCP Specification)
+            array(
+                "PRIVMSG victim :\001PING 1350742705\001\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'victim',
+                        'text' => "\001PING 1350742705\001",
+                        'all' => "victim :\001PING 1350742705\001",
+                    ),
+                    'targets' => array('victim'),
+                    'ctcp' => array(
+                        'command' => 'PING',
+                        'params' => array(
+                            'timestamp' => '1350742705',
+                            'all' => '1350742705',
+                        ),
+                    ),
+                ),
+            ),
+
+            array(
+                ":victim NOTICE actor :\001PING 1350742748\001\r\n",
+                array(
+                    'prefix' => ':victim',
+                    'nick' => 'victim',
+                    'command' => 'NOTICE',
+                    'params' => array(
+                        'nickname' => 'actor',
+                        'text' => "\001PING 1350742748\001",
+                        'all' => "actor :\001PING 1350742748\001",
+                    ),
+                    'targets' => array('actor'),
+                    'ctcp' => array(
+                        'command' => 'PING',
+                        'params' => array(
+                            'timestamp' => '1350742748',
+                            'all' => '1350742748',
+                        ),
+                    ),
+                )
+            ),
+
+            // TIME (CTCP Specification)
+            array(
+                "PRIVMSG victim :\001TIME\001\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'victim',
+                        'text' => "\001TIME\001",
+                        'all' => "victim :\001TIME\001",
+                    ),
+                    'targets' => array('victim'),
+                    'ctcp' => array(
+                        'command' => 'TIME',
+                    ),
+                ),
+            ),
+
+            array(
+                ":victim NOTICE actor :\001TIME :Thu Aug 11 22:52:51 1994 CST\001\r\n",
+                array(
+                    'prefix' => ':victim',
+                    'nick' => 'victim',
+                    'command' => 'NOTICE',
+                    'params' => array(
+                        'nickname' => 'actor',
+                        'text' => "\001TIME :Thu Aug 11 22:52:51 1994 CST\001",
+                        'all' => "actor :\001TIME :Thu Aug 11 22:52:51 1994 CST\001",
+                    ),
+                    'targets' => array('actor'),
+                    'ctcp' => array(
+                        'command' => 'TIME',
+                        'params' => array(
+                            'time' => 'Thu Aug 11 22:52:51 1994 CST',
+                            'all' => ':Thu Aug 11 22:52:51 1994 CST',
+                        ),
+                    ),
+                )
+            ),
         );
 
         foreach ($data as $key => $value) {
@@ -2154,7 +2457,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Data provider for testParseAll().
+     * Data provider for testParseAll() and testConsumeAll().
      *
      * @return array
      */
@@ -2193,7 +2496,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         // No messages
         $message = '';
         $data[] = array($message, array());
-        
+
         // One incomplete message
         $message .= $message1['string'];
         $data[] = array($message, array());
