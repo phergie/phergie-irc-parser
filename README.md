@@ -59,6 +59,7 @@ array(
         'all' => 'Wiz :Hello are you receiving this message ?',
     ),
     'targets' => array('Wiz'),
+    'message' => ":Angel PRIVMSG Wiz :Hello are you receiving this message ?\r\n",
 )
 */
 ```
