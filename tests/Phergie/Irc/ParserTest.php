@@ -2430,6 +2430,26 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     ),
                 )
             ),
+
+            // Freenode doesn't properly demarcate trailing command parameters in some cases
+            array(
+                ":pratchett.freenode.net 004 Phergie3 pratchett.freenode.net ircd-seven-1.1.3 DOQRSZaghilopswz CFILMPQbcefgijklmnopqrstvz bkloveqjfI\r\n",
+                array(
+                    'prefix' => ':pratchett.freenode.net',
+                    'servername' => 'pratchett.freenode.net',
+                    'command' => '004',
+                    'params' => array(
+                        1 => 'Phergie3',
+                        2 => 'pratchett.freenode.net',
+                        3 => 'ircd-seven-1.1.3',
+                        4 => 'DOQRSZaghilopswz',
+                        5 => 'CFILMPQbcefgijklmnopqrstvz',
+                        6 => 'bkloveqjfI',
+                        'all' => 'Phergie3 pratchett.freenode.net ircd-seven-1.1.3 DOQRSZaghilopswz CFILMPQbcefgijklmnopqrstvz bkloveqjfI',
+                    ),
+                    'code' => 'Unknown reply',
+                ),
+            ),
         );
 
         foreach ($data as $key => $value) {

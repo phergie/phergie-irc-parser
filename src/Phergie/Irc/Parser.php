@@ -202,7 +202,8 @@ class Parser implements ParserInterface
         $command = "(?P<command>[$letter]+|[$number]{3})";
         $middle = "(?: [^ $null$crlf:][^ $null$crlf]*)";
         $trailing = "(?: :[^$null$crlf]*)";
-        $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
+        // Last alternation provides for relaxed parsing of messages without trailing parameters properly demarcated
+        $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing)|(?:$middle{0,15}))";
         $name = "[$letter](?:[$letter$number\\-]*[$letter$number])?";
         $host = "$name(?:\\.$name)+";
         $nick = "(?:[$letter][$letter$number\\-\\[\\]\\\\`^{}]*)";
@@ -382,6 +383,19 @@ class Parser implements ParserInterface
                 $parsed['code'] = $this->replies[$command];
             } else {
                 $parsed['code'] = 'Unknown reply';
+            }
+            if (!empty($parsed['params'])) {
+                $all = $this->strip($parsed['params']);
+                if (strpos($parsed['params'], ' :') !== false) {
+                    list($head, $tail) = explode(' :', $parsed['params'], 2);
+                } else {
+                    $head = $parsed['params'];
+                    $tail = '';
+                }
+                $params = explode(' ', $head);
+                $params[] = $tail;
+                $parsed['params'] = array_filter($params);
+                $parsed['params']['all'] = $all;
             }
         }
 
