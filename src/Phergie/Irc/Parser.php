@@ -275,6 +275,7 @@ class Parser implements ParserInterface
             'ERRMSG'     => "/^(?:(?P<query>.+)(?: :(?P<message>$trailing))?)$/U",
             'PING'       => "/^(?:(?P<timestamp>$trailing))$/",
             'TIME'       => "/^(?::(?P<time>$trailing))$/",
+            'ACTION'       => "/^(?::(?P<action>$trailing))$/",
         );
     }
 
