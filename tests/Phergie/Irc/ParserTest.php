@@ -2160,6 +2160,31 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     ),
                 ),
             ),
+            
+            array(
+                ":john!~jsmith@example.com PRIVMSG #test :\001ACTION test\001\r\n",
+                array(
+                    'prefix' => ':john!~jsmith@example.com',
+                    'nick' => 'john',
+                    'user' => '~jsmith@example.com',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'all' => "#test :\001ACTION test\001",
+                        'receivers' => '#test',
+                        'text' => "\001ACTION test\001",
+                    ),
+                    'message' => ":john!~jsmith@example.com PRIVMSG #test :\001ACTION test\001\r\n",
+                    'targets' => Array (
+                        '0' => '#test',
+                    ),
+                    'ctcp' => Array (
+                        'command' => 'ACTION',
+                        'params' => Array(
+                            'all' => 'test',
+                        ),
+                    ),
+                ),
+            ),
 
             array(
                 ":victim NOTICE actor :\001FINGER :Please check my USERINFO instead :Klaus Zeuge (sojge@mizar) 1 second has passed since victim gave a command last.\001\r\n",
