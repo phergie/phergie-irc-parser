@@ -151,6 +151,18 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'targets' => array('Wiz'),
                 ),
             ),
+            
+            array(
+                "NICK :Wiz_\r\n",
+                array(
+                    'command' => 'NICK',
+                    'params' => array(
+                        'nickname' => 'Wiz_',
+                        'all' => 'Wiz_',
+                    ),
+                    'targets' => array('Wiz_'),
+                ),
+            ),
 
             array(
                 "NICK Wiz :1\r\n",
@@ -2157,6 +2169,32 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'targets' => array('victim'),
                     'ctcp' => array(
                         'command' => 'FINGER',
+                    ),
+                ),
+            ),
+            
+            // ACTION (CTCP Specification)
+            array(
+                ":john!~jsmith@example.com PRIVMSG #test :\001ACTION test\001\r\n",
+                array(
+                    'prefix' => ':john!~jsmith@example.com',
+                    'nick' => 'john',
+                    'user' => '~jsmith@example.com',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'all' => "#test :\001ACTION test\001",
+                        'receivers' => '#test',
+                        'text' => "\001ACTION test\001",
+                    ),
+                    'message' => ":john!~jsmith@example.com PRIVMSG #test :\001ACTION test\001\r\n",
+                    'targets' => Array (
+                        '0' => '#test',
+                    ),
+                    'ctcp' => Array (
+                        'command' => 'ACTION',
+                        'params' => Array(
+                            'all' => 'test',
+                        ),
                     ),
                 ),
             ),

@@ -206,7 +206,7 @@ class Parser implements ParserInterface
         $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing)|(?:$middle{0,15}))";
         $name = "[$letter](?:[$letter$number\\-]*[$letter$number])?";
         $host = "$name(?:\\.$name)+";
-        $nick = "(?:[$letter][$letter$number\\-\\[\\]\\\\`^{}]*)";
+        $nick = "(?:[$letter][$letter$number\\-\\[\\]\\\\`^{}\\_]*)";
         $user = "(?:[^ $null$crlf]+)";
         $prefix = "(?:(?P<servername>$host)|(?P<nick>$nick)(?:!(?P<user>$user))?(?:@$host)?)";
         $message = "(?P<prefix>:$prefix )?$command$params$crlf";
@@ -275,6 +275,7 @@ class Parser implements ParserInterface
             'ERRMSG'     => "/^(?:(?P<query>.+)(?: :(?P<message>$trailing))?)$/U",
             'PING'       => "/^(?:(?P<timestamp>$trailing))$/",
             'TIME'       => "/^(?::(?P<time>$trailing))$/",
+            'ACTION'       => "/^(?::(?P<action>$trailing))$/",
         );
     }
 
