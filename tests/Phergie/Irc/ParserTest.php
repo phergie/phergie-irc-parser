@@ -2155,23 +2155,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'code' => 'Unknown reply',
                 ),
             ),
-
-            // FINGER (CTCP Specification)
-            array(
-                "PRIVMSG victim :\001FINGER\001\r\n",
-                array(
-                    'command' => 'PRIVMSG',
-                    'params' => array(
-                        'receivers' => 'victim',
-                        'text' => "\001FINGER\001",
-                        'all' => "victim :\001FINGER\001",
-                    ),
-                    'targets' => array('victim'),
-                    'ctcp' => array(
-                        'command' => 'FINGER',
-                    ),
-                ),
-            ),
             
             // ACTION (CTCP Specification)
             array(
@@ -2195,6 +2178,23 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'params' => Array(
                             'all' => 'test',
                         ),
+                    ),
+                ),
+            ),
+
+            // FINGER (CTCP Specification)
+            array(
+                "PRIVMSG victim :\001FINGER\001\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'victim',
+                        'text' => "\001FINGER\001",
+                        'all' => "victim :\001FINGER\001",
+                    ),
+                    'targets' => array('victim'),
+                    'ctcp' => array(
+                        'command' => 'FINGER',
                     ),
                 ),
             ),
