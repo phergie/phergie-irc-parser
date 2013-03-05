@@ -202,10 +202,11 @@ class Parser implements ParserInterface
         $command = "(?P<command>[$letter]+|[$number]{3})";
         $middle = "(?: [^ $null$crlf:][^ $null$crlf]*)";
         $trailing = "(?: :[^$null$crlf]*)";
-        $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
+        // Last alternation provides for relaxed parsing of messages without trailing parameters properly demarcated
+        $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing)|(?:$middle{0,15}))";
         $name = "[$letter](?:[$letter$number\\-]*[$letter$number])?";
         $host = "$name(?:\\.$name)+";
-        $nick = "(?:[$letter][$letter$number\\-\\[\\]\\\\`^{}]*)";
+        $nick = "(?:[$letter][$letter$number\\-\\[\\]\\\\`^{}\\_]*)";
         $user = "(?:[^ $null$crlf]+)";
         $prefix = "(?:(?P<servername>$host)|(?P<nick>$nick)(?:!(?P<user>$user))?(?:@$host)?)";
         $message = "(?P<prefix>:$prefix )?$command$params$crlf";
@@ -274,6 +275,7 @@ class Parser implements ParserInterface
             'ERRMSG'     => "/^(?:(?P<query>.+)(?: :(?P<message>$trailing))?)$/U",
             'PING'       => "/^(?:(?P<timestamp>$trailing))$/",
             'TIME'       => "/^(?::(?P<time>$trailing))$/",
+            'ACTION'       => "/^(?::(?P<action>$trailing))$/",
         );
     }
 
@@ -382,6 +384,19 @@ class Parser implements ParserInterface
                 $parsed['code'] = $this->replies[$command];
             } else {
                 $parsed['code'] = 'Unknown reply';
+            }
+            if (!empty($parsed['params'])) {
+                $all = $this->strip($parsed['params']);
+                if (strpos($parsed['params'], ' :') !== false) {
+                    list($head, $tail) = explode(' :', $parsed['params'], 2);
+                } else {
+                    $head = $parsed['params'];
+                    $tail = '';
+                }
+                $params = explode(' ', $head);
+                $params[] = $tail;
+                $parsed['params'] = array_filter($params);
+                $parsed['params']['all'] = $all;
             }
         }
 

@@ -151,6 +151,18 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'targets' => array('Wiz'),
                 ),
             ),
+            
+            array(
+                "NICK :Wiz_\r\n",
+                array(
+                    'command' => 'NICK',
+                    'params' => array(
+                        'nickname' => 'Wiz_',
+                        'all' => 'Wiz_',
+                    ),
+                    'targets' => array('Wiz_'),
+                ),
+            ),
 
             array(
                 "NICK Wiz :1\r\n",
@@ -2143,6 +2155,32 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'code' => 'Unknown reply',
                 ),
             ),
+            
+            // ACTION (CTCP Specification)
+            array(
+                ":john!~jsmith@example.com PRIVMSG #test :\001ACTION test\001\r\n",
+                array(
+                    'prefix' => ':john!~jsmith@example.com',
+                    'nick' => 'john',
+                    'user' => '~jsmith@example.com',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'all' => "#test :\001ACTION test\001",
+                        'receivers' => '#test',
+                        'text' => "\001ACTION test\001",
+                    ),
+                    'message' => ":john!~jsmith@example.com PRIVMSG #test :\001ACTION test\001\r\n",
+                    'targets' => Array (
+                        '0' => '#test',
+                    ),
+                    'ctcp' => Array (
+                        'command' => 'ACTION',
+                        'params' => Array(
+                            'all' => 'test',
+                        ),
+                    ),
+                ),
+            ),
 
             // FINGER (CTCP Specification)
             array(
@@ -2429,6 +2467,26 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         ),
                     ),
                 )
+            ),
+
+            // Freenode doesn't properly demarcate trailing command parameters in some cases
+            array(
+                ":pratchett.freenode.net 004 Phergie3 pratchett.freenode.net ircd-seven-1.1.3 DOQRSZaghilopswz CFILMPQbcefgijklmnopqrstvz bkloveqjfI\r\n",
+                array(
+                    'prefix' => ':pratchett.freenode.net',
+                    'servername' => 'pratchett.freenode.net',
+                    'command' => '004',
+                    'params' => array(
+                        1 => 'Phergie3',
+                        2 => 'pratchett.freenode.net',
+                        3 => 'ircd-seven-1.1.3',
+                        4 => 'DOQRSZaghilopswz',
+                        5 => 'CFILMPQbcefgijklmnopqrstvz',
+                        6 => 'bkloveqjfI',
+                        'all' => 'Phergie3 pratchett.freenode.net ircd-seven-1.1.3 DOQRSZaghilopswz CFILMPQbcefgijklmnopqrstvz bkloveqjfI',
+                    ),
+                    'code' => 'Unknown reply',
+                ),
             ),
         );
 
