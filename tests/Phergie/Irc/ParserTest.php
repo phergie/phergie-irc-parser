@@ -1309,833 +1309,833 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
             // Error replies (RFC 1459 Section 6.1)
             array(
-				"401\r\n",
-				array(
-					'command' => '401',
-					'code' => 'ERR_NOSUCHNICK',
-				),
-			),
+                "401\r\n",
+                array(
+                    'command' => '401',
+                    'code' => 'ERR_NOSUCHNICK',
+                ),
+            ),
             array(
-				"402\r\n",
-				array(
-					'command' => '402',
-					'code' => 'ERR_NOSUCHSERVER',
-				),
-			),
+                "402\r\n",
+                array(
+                    'command' => '402',
+                    'code' => 'ERR_NOSUCHSERVER',
+                ),
+            ),
             array(
-				"403\r\n",
-				array(
-					'command' => '403',
-					'code' => 'ERR_NOSUCHCHANNEL',
-				),
-			),
+                "403\r\n",
+                array(
+                    'command' => '403',
+                    'code' => 'ERR_NOSUCHCHANNEL',
+                ),
+            ),
             array(
-				"404\r\n",
-				array(
-					'command' => '404',
-					'code' => 'ERR_CANNOTSENDTOCHAN',
-				),
-			),
+                "404\r\n",
+                array(
+                    'command' => '404',
+                    'code' => 'ERR_CANNOTSENDTOCHAN',
+                ),
+            ),
             array(
-				"405\r\n",
-				array(
-					'command' => '405',
-					'code' => 'ERR_TOOMANYCHANNELS',
-				),
-			),
+                "405\r\n",
+                array(
+                    'command' => '405',
+                    'code' => 'ERR_TOOMANYCHANNELS',
+                ),
+            ),
             array(
-				"406\r\n",
-				array(
-					'command' => '406',
-					'code' => 'ERR_WASNOSUCHNICK',
-				),
-			),
+                "406\r\n",
+                array(
+                    'command' => '406',
+                    'code' => 'ERR_WASNOSUCHNICK',
+                ),
+            ),
             array(
-				"407\r\n",
-				array(
-					'command' => '407',
-					'code' => 'ERR_TOOMANYTARGETS',
-				),
-			),
+                "407\r\n",
+                array(
+                    'command' => '407',
+                    'code' => 'ERR_TOOMANYTARGETS',
+                ),
+            ),
             array(
-				"409\r\n",
-				array(
-					'command' => '409',
-					'code' => 'ERR_NOORIGIN',
-				),
-			),
+                "409\r\n",
+                array(
+                    'command' => '409',
+                    'code' => 'ERR_NOORIGIN',
+                ),
+            ),
             array(
-				"411\r\n",
-				array(
-					'command' => '411',
-					'code' => 'ERR_NORECIPIENT',
-				),
-			),
+                "411\r\n",
+                array(
+                    'command' => '411',
+                    'code' => 'ERR_NORECIPIENT',
+                ),
+            ),
             array(
-				"412\r\n",
-				array(
-					'command' => '412',
-					'code' => 'ERR_NOTEXTTOSEND',
-				),
-			),
+                "412\r\n",
+                array(
+                    'command' => '412',
+                    'code' => 'ERR_NOTEXTTOSEND',
+                ),
+            ),
             array(
-				"413\r\n",
-				array(
-					'command' => '413',
-					'code' => 'ERR_NOTOPLEVEL',
-				),
-			),
+                "413\r\n",
+                array(
+                    'command' => '413',
+                    'code' => 'ERR_NOTOPLEVEL',
+                ),
+            ),
             array(
-				"414\r\n",
-				array(
-					'command' => '414',
-					'code' => 'ERR_WILDTOPLEVEL',
-				),
-			),
+                "414\r\n",
+                array(
+                    'command' => '414',
+                    'code' => 'ERR_WILDTOPLEVEL',
+                ),
+            ),
             array(
-				"421\r\n",
-				array(
-					'command' => '421',
-					'code' => 'ERR_UNKNOWNCOMMAND',
-				),
-			),
+                "421\r\n",
+                array(
+                    'command' => '421',
+                    'code' => 'ERR_UNKNOWNCOMMAND',
+                ),
+            ),
             array(
-				"422\r\n",
-				array(
-					'command' => '422',
-					'code' => 'ERR_NOMOTD',
-				),
-			),
+                "422\r\n",
+                array(
+                    'command' => '422',
+                    'code' => 'ERR_NOMOTD',
+                ),
+            ),
             array(
-				"423\r\n",
-				array(
-					'command' => '423',
-					'code' => 'ERR_NOADMININFO',
-				),
-			),
+                "423\r\n",
+                array(
+                    'command' => '423',
+                    'code' => 'ERR_NOADMININFO',
+                ),
+            ),
             array(
-				"424\r\n",
-				array(
-					'command' => '424',
-					'code' => 'ERR_FILEERROR',
-				),
-			),
+                "424\r\n",
+                array(
+                    'command' => '424',
+                    'code' => 'ERR_FILEERROR',
+                ),
+            ),
             array(
-				"431\r\n",
-				array(
-					'command' => '431',
-					'code' => 'ERR_NONICKNAMEGIVEN',
-				),
-			),
+                "431\r\n",
+                array(
+                    'command' => '431',
+                    'code' => 'ERR_NONICKNAMEGIVEN',
+                ),
+            ),
             array(
-				"432\r\n",
-				array(
-					'command' => '432',
-					'code' => 'ERR_ERRONEUSNICKNAME',
-				),
-			),
+                "432\r\n",
+                array(
+                    'command' => '432',
+                    'code' => 'ERR_ERRONEUSNICKNAME',
+                ),
+            ),
             array(
-				"433\r\n",
-				array(
-					'command' => '433',
-					'code' => 'ERR_NICKNAMEINUSE',
-				),
-			),
+                "433\r\n",
+                array(
+                    'command' => '433',
+                    'code' => 'ERR_NICKNAMEINUSE',
+                ),
+            ),
             array(
-				"436\r\n",
-				array(
-					'command' => '436',
-					'code' => 'ERR_NICKCOLLISION',
-				),
-			),
+                "436\r\n",
+                array(
+                    'command' => '436',
+                    'code' => 'ERR_NICKCOLLISION',
+                ),
+            ),
             array(
-				"441\r\n",
-				array(
-					'command' => '441',
-					'code' => 'ERR_USERNOTINCHANNEL',
-				),
-			),
+                "441\r\n",
+                array(
+                    'command' => '441',
+                    'code' => 'ERR_USERNOTINCHANNEL',
+                ),
+            ),
             array(
-				"442\r\n",
-				array(
-					'command' => '442',
-					'code' => 'ERR_NOTONCHANNEL',
-				),
-			),
+                "442\r\n",
+                array(
+                    'command' => '442',
+                    'code' => 'ERR_NOTONCHANNEL',
+                ),
+            ),
             array(
-				"443\r\n",
-				array(
-					'command' => '443',
-					'code' => 'ERR_USERONCHANNEL',
-				),
-			),
+                "443\r\n",
+                array(
+                    'command' => '443',
+                    'code' => 'ERR_USERONCHANNEL',
+                ),
+            ),
             array(
-				"444\r\n",
-				array(
-					'command' => '444',
-					'code' => 'ERR_NOLOGIN',
-				),
-			),
+                "444\r\n",
+                array(
+                    'command' => '444',
+                    'code' => 'ERR_NOLOGIN',
+                ),
+            ),
             array(
-				"445\r\n",
-				array(
-					'command' => '445',
-					'code' => 'ERR_SUMMONDISABLED',
-				),
-			),
+                "445\r\n",
+                array(
+                    'command' => '445',
+                    'code' => 'ERR_SUMMONDISABLED',
+                ),
+            ),
             array(
-				"446\r\n",
-				array(
-					'command' => '446',
-					'code' => 'ERR_USERSDISABLED',
-				),
-			),
+                "446\r\n",
+                array(
+                    'command' => '446',
+                    'code' => 'ERR_USERSDISABLED',
+                ),
+            ),
             array(
-				"451\r\n",
-				array(
-					'command' => '451',
-					'code' => 'ERR_NOTREGISTERED',
-				),
-			),
+                "451\r\n",
+                array(
+                    'command' => '451',
+                    'code' => 'ERR_NOTREGISTERED',
+                ),
+            ),
             array(
-				"461\r\n",
-				array(
-					'command' => '461',
-					'code' => 'ERR_NEEDMOREPARAMS',
-				),
-			),
+                "461\r\n",
+                array(
+                    'command' => '461',
+                    'code' => 'ERR_NEEDMOREPARAMS',
+                ),
+            ),
             array(
-				"462\r\n",
-				array(
-					'command' => '462',
-					'code' => 'ERR_ALREADYREGISTRED',
-				),
-			),
+                "462\r\n",
+                array(
+                    'command' => '462',
+                    'code' => 'ERR_ALREADYREGISTRED',
+                ),
+            ),
             array(
-				"463\r\n",
-				array(
-					'command' => '463',
-					'code' => 'ERR_NOPERMFORHOST',
-				),
-			),
+                "463\r\n",
+                array(
+                    'command' => '463',
+                    'code' => 'ERR_NOPERMFORHOST',
+                ),
+            ),
             array(
-				"464\r\n",
-				array(
-					'command' => '464',
-					'code' => 'ERR_PASSWDMISMATCH',
-				),
-			),
+                "464\r\n",
+                array(
+                    'command' => '464',
+                    'code' => 'ERR_PASSWDMISMATCH',
+                ),
+            ),
             array(
-				"465\r\n",
-				array(
-					'command' => '465',
-					'code' => 'ERR_YOUREBANNEDCREEP',
-				),
-			),
+                "465\r\n",
+                array(
+                    'command' => '465',
+                    'code' => 'ERR_YOUREBANNEDCREEP',
+                ),
+            ),
             array(
-				"467\r\n",
-				array(
-					'command' => '467',
-					'code' => 'ERR_KEYSET',
-				),
-			),
+                "467\r\n",
+                array(
+                    'command' => '467',
+                    'code' => 'ERR_KEYSET',
+                ),
+            ),
             array(
-				"471\r\n",
-				array(
-					'command' => '471',
-					'code' => 'ERR_CHANNELISFULL',
-				),
-			),
+                "471\r\n",
+                array(
+                    'command' => '471',
+                    'code' => 'ERR_CHANNELISFULL',
+                ),
+            ),
             array(
-				"472\r\n",
-				array(
-					'command' => '472',
-					'code' => 'ERR_UNKNOWNMODE',
-				),
-			),
+                "472\r\n",
+                array(
+                    'command' => '472',
+                    'code' => 'ERR_UNKNOWNMODE',
+                ),
+            ),
             array(
-				"473\r\n",
-				array(
-					'command' => '473',
-					'code' => 'ERR_INVITEONLYCHAN',
-				),
-			),
+                "473\r\n",
+                array(
+                    'command' => '473',
+                    'code' => 'ERR_INVITEONLYCHAN',
+                ),
+            ),
             array(
-				"474\r\n",
-				array(
-					'command' => '474',
-					'code' => 'ERR_BANNEDFROMCHAN',
-				),
-			),
+                "474\r\n",
+                array(
+                    'command' => '474',
+                    'code' => 'ERR_BANNEDFROMCHAN',
+                ),
+            ),
             array(
-				"475\r\n",
-				array(
-					'command' => '475',
-					'code' => 'ERR_BADCHANNELKEY',
-				),
-			),
+                "475\r\n",
+                array(
+                    'command' => '475',
+                    'code' => 'ERR_BADCHANNELKEY',
+                ),
+            ),
             array(
-				"481\r\n",
-				array(
-					'command' => '481',
-					'code' => 'ERR_NOPRIVILEGES',
-				),
-			),
+                "481\r\n",
+                array(
+                    'command' => '481',
+                    'code' => 'ERR_NOPRIVILEGES',
+                ),
+            ),
             array(
-				"482\r\n",
-				array(
-					'command' => '482',
-					'code' => 'ERR_CHANOPRIVSNEEDED',
-				),
-			),
+                "482\r\n",
+                array(
+                    'command' => '482',
+                    'code' => 'ERR_CHANOPRIVSNEEDED',
+                ),
+            ),
             array(
-				"483\r\n",
-				array(
-					'command' => '483',
-					'code' => 'ERR_CANTKILLSERVER',
-				),
-			),
+                "483\r\n",
+                array(
+                    'command' => '483',
+                    'code' => 'ERR_CANTKILLSERVER',
+                ),
+            ),
             array(
-				"491\r\n",
-				array(
-					'command' => '491',
-					'code' => 'ERR_NOOPERHOST',
-				),
-			),
+                "491\r\n",
+                array(
+                    'command' => '491',
+                    'code' => 'ERR_NOOPERHOST',
+                ),
+            ),
             array(
-				"501\r\n",
-				array(
-					'command' => '501',
-					'code' => 'ERR_UMODEUNKNOWNFLAG',
-				),
-			),
+                "501\r\n",
+                array(
+                    'command' => '501',
+                    'code' => 'ERR_UMODEUNKNOWNFLAG',
+                ),
+            ),
             array(
-				"502\r\n",
-				array(
-					'command' => '502',
-					'code' => 'ERR_USERSDONTMATCH',
-				),
-			),
+                "502\r\n",
+                array(
+                    'command' => '502',
+                    'code' => 'ERR_USERSDONTMATCH',
+                ),
+            ),
 
             // Command responses (RFC 1459 Section 6.2)
             array(
-				"300\r\n",
-				array(
-					'command' => '300',
-					'code' => 'RPL_NONE',
-				),
-			),
-            array(
-				"302\r\n",
-				array(
-					'command' => '302',
-					'code' => 'RPL_USERHOST',
-				),
-			),
-            array(
-				"303\r\n",
-				array(
-					'command' => '303',
-					'code' => 'RPL_ISON',
-				),
-			),
-            array(
-				"301\r\n",
-				array(
-					'command' => '301',
-					'code' => 'RPL_AWAY',
-				),
-			),
-            array(
-				"305\r\n",
-				array(
-					'command' => '305',
-					'code' => 'RPL_UNAWAY',
-				),
-			),
-            array(
-				"306\r\n",
-				array(
-					'command' => '306',
-					'code' => 'RPL_NOWAWAY',
-				),
-			),
-            array(
-				"311\r\n",
-				array(
-					'command' => '311',
-					'code' => 'RPL_WHOISUSER',
-				),
-			),
-            array(
-				"312\r\n",
-				array(
-					'command' => '312',
-					'code' => 'RPL_WHOISSERVER',
-				),
-			),
-            array(
-				"313\r\n",
-				array(
-					'command' => '313',
-					'code' => 'RPL_WHOISOPERATOR',
-				),
-			),
-            array(
-				"317\r\n",
-				array(
-					'command' => '317',
-					'code' => 'RPL_WHOISIDLE',
-				),
-			),
-            array(
-				"318\r\n",
-				array(
-					'command' => '318',
-					'code' => 'RPL_ENDOFWHOIS',
-				),
-			),
-            array(
-				"319\r\n",
-				array(
-					'command' => '319',
-					'code' => 'RPL_WHOISCHANNELS',
-				),
-			),
-            array(
-				"314\r\n",
-				array(
-					'command' => '314',
-					'code' => 'RPL_WHOWASUSER',
-				),
-			),
-            array(
-				"369\r\n",
-				array(
-					'command' => '369',
-					'code' => 'RPL_ENDOFWHOWAS',
-				),
-			),
-            array(
-				"321\r\n",
-				array(
-					'command' => '321',
-					'code' => 'RPL_LISTSTART',
-				),
-			),
-            array(
-				"322\r\n",
-				array(
-					'command' => '322',
-					'code' => 'RPL_LIST',
-				),
-			),
-            array(
-				"323\r\n",
-				array(
-					'command' => '323',
-					'code' => 'RPL_LISTEND',
-				),
-			),
-            array(
-				"324\r\n",
-				array(
-					'command' => '324',
-					'code' => 'RPL_CHANNELMODEIS',
-				),
-			),
-            array(
-				"331\r\n",
-				array(
-					'command' => '331',
-					'code' => 'RPL_NOTOPIC',
-				),
-			),
-            array(
-				"332\r\n",
-				array(
-					'command' => '332',
-					'code' => 'RPL_TOPIC',
-				),
-			),
-            array(
-				"341\r\n",
-				array(
-					'command' => '341',
-					'code' => 'RPL_INVITING',
-				),
-			),
-            array(
-				"342\r\n",
-				array(
-					'command' => '342',
-					'code' => 'RPL_SUMMONING',
-				),
-			),
-            array(
-				"351\r\n",
-				array(
-					'command' => '351',
-					'code' => 'RPL_VERSION',
-				),
-			),
-            array(
-				"352\r\n",
-				array(
-					'command' => '352',
-					'code' => 'RPL_WHOREPLY',
-				),
-			),
-            array(
-				"315\r\n",
-				array(
-					'command' => '315',
-					'code' => 'RPL_ENDOFWHO',
-				),
-			),
-            array(
-				"353\r\n",
-				array(
-					'command' => '353',
-					'code' => 'RPL_NAMREPLY',
-				),
-			),
-            array(
-				"366\r\n",
-				array(
-					'command' => '366',
-					'code' => 'RPL_ENDOFNAMES',
-				),
-			),
-            array(
-				"364\r\n",
-				array(
-					'command' => '364',
-					'code' => 'RPL_LINKS',
-				),
-			),
-            array(
-				"365\r\n",
-				array(
-					'command' => '365',
-					'code' => 'RPL_ENDOFLINKS',
-				),
-			),
-            array(
-				"367\r\n",
-				array(
-					'command' => '367',
-					'code' => 'RPL_BANLIST',
-				),
-			),
-            array(
-				"368\r\n",
-				array(
-					'command' => '368',
-					'code' => 'RPL_ENDOFBANLIST',
-				),
-			),
-            array(
-				"371\r\n",
-				array(
-					'command' => '371',
-					'code' => 'RPL_INFO',
-				),
-			),
-            array(
-				"374\r\n",
-				array(
-					'command' => '374',
-					'code' => 'RPL_ENDOFINFO',
-				),
-			),
-            array(
-				"375\r\n",
-				array(
-					'command' => '375',
-					'code' => 'RPL_MOTDSTART',
-				),
-			),
-            array(
-				"372\r\n",
-				array(
-					'command' => '372',
-					'code' => 'RPL_MOTD',
-				),
-			),
-            array(
-				"376\r\n",
-				array(
-					'command' => '376',
-					'code' => 'RPL_ENDOFMOTD',
-				),
-			),
-            array(
-				"381\r\n",
-				array(
-					'command' => '381',
-					'code' => 'RPL_YOUREOPER',
-				),
-			),
-            array(
-				"382\r\n",
-				array(
-					'command' => '382',
-					'code' => 'RPL_REHASHING',
-				),
-			),
-            array(
-				"391\r\n",
-				array(
-					'command' => '391',
-					'code' => 'RPL_TIME',
-				),
-			),
-            array(
-				"392\r\n",
-				array(
-					'command' => '392',
-					'code' => 'RPL_USERSSTART',
-				),
-			),
-            array(
-				"393\r\n",
-				array(
-					'command' => '393',
-					'code' => 'RPL_USERS',
-				),
-			),
-            array(
-				"394\r\n",
-				array(
-					'command' => '394',
-					'code' => 'RPL_ENDOFUSERS',
-				),
-			),
-            array(
-				"395\r\n",
-				array(
-					'command' => '395',
-					'code' => 'RPL_NOUSERS',
-				),
-			),
-            array(
-				"200\r\n",
-				array(
-					'command' => '200',
-					'code' => 'RPL_TRACELINK',
-				),
-			),
-            array(
-				"201\r\n",
-				array(
-					'command' => '201',
-					'code' => 'RPL_TRACECONNECTING',
-				),
-			),
-            array(
-				"202\r\n",
-				array(
-					'command' => '202',
-					'code' => 'RPL_TRACEHANDSHAKE',
-				),
-			),
-            array(
-				"203\r\n",
-				array(
-					'command' => '203',
-					'code' => 'RPL_TRACEUNKNOWN',
-				),
-			),
-            array(
-				"204\r\n",
-				array(
-					'command' => '204',
-					'code' => 'RPL_TRACEOPERATOR',
-				),
-			),
-            array(
-				"205\r\n",
-				array(
-					'command' => '205',
-					'code' => 'RPL_TRACEUSER',
-				),
-			),
-            array(
-				"206\r\n",
-				array(
-					'command' => '206',
-					'code' => 'RPL_TRACESERVER',
-				),
-			),
-            array(
-				"208\r\n",
-				array(
-					'command' => '208',
-					'code' => 'RPL_TRACENEWTYPE',
-				),
-			),
-            array(
-				"261\r\n",
-				array(
-					'command' => '261',
-					'code' => 'RPL_TRACELOG',
-				),
-			),
-            array(
-				"211\r\n",
-				array(
-					'command' => '211',
-					'code' => 'RPL_STATSLINKINFO',
-				),
-			),
-            array(
-				"212\r\n",
-				array(
-					'command' => '212',
-					'code' => 'RPL_STATSCOMMANDS',
-				),
-			),
-            array(
-				"213\r\n",
-				array(
-					'command' => '213',
-					'code' => 'RPL_STATSCLINE',
-				),
-			),
-            array(
-				"214\r\n",
-				array(
-					'command' => '214',
-					'code' => 'RPL_STATSNLINE',
-				),
-			),
-            array(
-				"215\r\n",
-				array(
-					'command' => '215',
-					'code' => 'RPL_STATSILINE',
-				),
-			),
-            array(
-				"216\r\n",
-				array(
-					'command' => '216',
-					'code' => 'RPL_STATSKLINE',
-				),
-			),
-            array(
-				"218\r\n",
-				array(
-					'command' => '218',
-					'code' => 'RPL_STATSYLINE',
-				),
-			),
-            array(
-				"219\r\n",
-				array(
-					'command' => '219',
-					'code' => 'RPL_ENDOFSTATS',
-				),
-			),
-            array(
-				"241\r\n",
-				array(
-					'command' => '241',
-					'code' => 'RPL_STATSLLINE',
-				),
-			),
-            array(
-				"242\r\n",
-				array(
-					'command' => '242',
-					'code' => 'RPL_STATSUPTIME',
-				),
-			),
-            array(
-				"243\r\n",
-				array(
-					'command' => '243',
-					'code' => 'RPL_STATSOLINE',
-				),
-			),
-            array(
-				"244\r\n",
-				array(
-					'command' => '244',
-					'code' => 'RPL_STATSHLINE',
-				),
-			),
-            array(
-				"221\r\n",
-				array(
-					'command' => '221',
-					'code' => 'RPL_UMODEIS',
-				),
-			),
-            array(
-				"251\r\n",
-				array(
-					'command' => '251',
-					'code' => 'RPL_LUSERCLIENT',
-				),
-			),
-            array(
-				"252\r\n",
-				array(
-					'command' => '252',
-					'code' => 'RPL_LUSEROP',
-				),
-			),
-            array(
-				"253\r\n",
-				array(
-					'command' => '253',
-					'code' => 'RPL_LUSERUNKNOWN',
-				),
-			),
-            array(
-				"254\r\n",
-				array(
-					'command' => '254',
-					'code' => 'RPL_LUSERCHANNELS',
-				),
-			),
-            array(
-				"255\r\n",
-				array(
-					'command' => '255',
-					'code' => 'RPL_LUSERME',
-				),
-			),
-            array(
-				"256\r\n",
-				array(
-					'command' => '256',
-					'code' => 'RPL_ADMINME',
-				),
-			),
-            array(
-				"257\r\n",
-				array(
-					'command' => '257',
-					'code' => 'RPL_ADMINLOC1',
-				),
-			),
-            array(
-				"258\r\n",
-				array(
-					'command' => '258',
-					'code' => 'RPL_ADMINLOC2',
-				),
-			),
-            array(
-				"259\r\n",
-				array(
-					'command' => '259',
-					'code' => 'RPL_ADMINEMAIL',
-				),
-			),
+                "300\r\n",
+                array(
+                    'command' => '300',
+                    'code' => 'RPL_NONE',
+                ),
+            ),
+            array(
+                "302\r\n",
+                array(
+                    'command' => '302',
+                    'code' => 'RPL_USERHOST',
+                ),
+            ),
+            array(
+                "303\r\n",
+                array(
+                    'command' => '303',
+                    'code' => 'RPL_ISON',
+                ),
+            ),
+            array(
+                "301\r\n",
+                array(
+                    'command' => '301',
+                    'code' => 'RPL_AWAY',
+                ),
+            ),
+            array(
+                "305\r\n",
+                array(
+                    'command' => '305',
+                    'code' => 'RPL_UNAWAY',
+                ),
+            ),
+            array(
+                "306\r\n",
+                array(
+                    'command' => '306',
+                    'code' => 'RPL_NOWAWAY',
+                ),
+            ),
+            array(
+                "311\r\n",
+                array(
+                    'command' => '311',
+                    'code' => 'RPL_WHOISUSER',
+                ),
+            ),
+            array(
+                "312\r\n",
+                array(
+                    'command' => '312',
+                    'code' => 'RPL_WHOISSERVER',
+                ),
+            ),
+            array(
+                "313\r\n",
+                array(
+                    'command' => '313',
+                    'code' => 'RPL_WHOISOPERATOR',
+                ),
+            ),
+            array(
+                "317\r\n",
+                array(
+                    'command' => '317',
+                    'code' => 'RPL_WHOISIDLE',
+                ),
+            ),
+            array(
+                "318\r\n",
+                array(
+                    'command' => '318',
+                    'code' => 'RPL_ENDOFWHOIS',
+                ),
+            ),
+            array(
+                "319\r\n",
+                array(
+                    'command' => '319',
+                    'code' => 'RPL_WHOISCHANNELS',
+                ),
+            ),
+            array(
+                "314\r\n",
+                array(
+                    'command' => '314',
+                    'code' => 'RPL_WHOWASUSER',
+                ),
+            ),
+            array(
+                "369\r\n",
+                array(
+                    'command' => '369',
+                    'code' => 'RPL_ENDOFWHOWAS',
+                ),
+            ),
+            array(
+                "321\r\n",
+                array(
+                    'command' => '321',
+                    'code' => 'RPL_LISTSTART',
+                ),
+            ),
+            array(
+                "322\r\n",
+                array(
+                    'command' => '322',
+                    'code' => 'RPL_LIST',
+                ),
+            ),
+            array(
+                "323\r\n",
+                array(
+                    'command' => '323',
+                    'code' => 'RPL_LISTEND',
+                ),
+            ),
+            array(
+                "324\r\n",
+                array(
+                    'command' => '324',
+                    'code' => 'RPL_CHANNELMODEIS',
+                ),
+            ),
+            array(
+                "331\r\n",
+                array(
+                    'command' => '331',
+                    'code' => 'RPL_NOTOPIC',
+                ),
+            ),
+            array(
+                "332\r\n",
+                array(
+                    'command' => '332',
+                    'code' => 'RPL_TOPIC',
+                ),
+            ),
+            array(
+                "341\r\n",
+                array(
+                    'command' => '341',
+                    'code' => 'RPL_INVITING',
+                ),
+            ),
+            array(
+                "342\r\n",
+                array(
+                    'command' => '342',
+                    'code' => 'RPL_SUMMONING',
+                ),
+            ),
+            array(
+                "351\r\n",
+                array(
+                    'command' => '351',
+                    'code' => 'RPL_VERSION',
+                ),
+            ),
+            array(
+                "352\r\n",
+                array(
+                    'command' => '352',
+                    'code' => 'RPL_WHOREPLY',
+                ),
+            ),
+            array(
+                "315\r\n",
+                array(
+                    'command' => '315',
+                    'code' => 'RPL_ENDOFWHO',
+                ),
+            ),
+            array(
+                "353\r\n",
+                array(
+                    'command' => '353',
+                    'code' => 'RPL_NAMREPLY',
+                ),
+            ),
+            array(
+                "366\r\n",
+                array(
+                    'command' => '366',
+                    'code' => 'RPL_ENDOFNAMES',
+                ),
+            ),
+            array(
+                "364\r\n",
+                array(
+                    'command' => '364',
+                    'code' => 'RPL_LINKS',
+                ),
+            ),
+            array(
+                "365\r\n",
+                array(
+                    'command' => '365',
+                    'code' => 'RPL_ENDOFLINKS',
+                ),
+            ),
+            array(
+                "367\r\n",
+                array(
+                    'command' => '367',
+                    'code' => 'RPL_BANLIST',
+                ),
+            ),
+            array(
+                "368\r\n",
+                array(
+                    'command' => '368',
+                    'code' => 'RPL_ENDOFBANLIST',
+                ),
+            ),
+            array(
+                "371\r\n",
+                array(
+                    'command' => '371',
+                    'code' => 'RPL_INFO',
+                ),
+            ),
+            array(
+                "374\r\n",
+                array(
+                    'command' => '374',
+                    'code' => 'RPL_ENDOFINFO',
+                ),
+            ),
+            array(
+                "375\r\n",
+                array(
+                    'command' => '375',
+                    'code' => 'RPL_MOTDSTART',
+                ),
+            ),
+            array(
+                "372\r\n",
+                array(
+                    'command' => '372',
+                    'code' => 'RPL_MOTD',
+                ),
+            ),
+            array(
+                "376\r\n",
+                array(
+                    'command' => '376',
+                    'code' => 'RPL_ENDOFMOTD',
+                ),
+            ),
+            array(
+                "381\r\n",
+                array(
+                    'command' => '381',
+                    'code' => 'RPL_YOUREOPER',
+                ),
+            ),
+            array(
+                "382\r\n",
+                array(
+                    'command' => '382',
+                    'code' => 'RPL_REHASHING',
+                ),
+            ),
+            array(
+                "391\r\n",
+                array(
+                    'command' => '391',
+                    'code' => 'RPL_TIME',
+                ),
+            ),
+            array(
+                "392\r\n",
+                array(
+                    'command' => '392',
+                    'code' => 'RPL_USERSSTART',
+                ),
+            ),
+            array(
+                "393\r\n",
+                array(
+                    'command' => '393',
+                    'code' => 'RPL_USERS',
+                ),
+            ),
+            array(
+                "394\r\n",
+                array(
+                    'command' => '394',
+                    'code' => 'RPL_ENDOFUSERS',
+                ),
+            ),
+            array(
+                "395\r\n",
+                array(
+                    'command' => '395',
+                    'code' => 'RPL_NOUSERS',
+                ),
+            ),
+            array(
+                "200\r\n",
+                array(
+                    'command' => '200',
+                    'code' => 'RPL_TRACELINK',
+                ),
+            ),
+            array(
+                "201\r\n",
+                array(
+                    'command' => '201',
+                    'code' => 'RPL_TRACECONNECTING',
+                ),
+            ),
+            array(
+                "202\r\n",
+                array(
+                    'command' => '202',
+                    'code' => 'RPL_TRACEHANDSHAKE',
+                ),
+            ),
+            array(
+                "203\r\n",
+                array(
+                    'command' => '203',
+                    'code' => 'RPL_TRACEUNKNOWN',
+                ),
+            ),
+            array(
+                "204\r\n",
+                array(
+                    'command' => '204',
+                    'code' => 'RPL_TRACEOPERATOR',
+                ),
+            ),
+            array(
+                "205\r\n",
+                array(
+                    'command' => '205',
+                    'code' => 'RPL_TRACEUSER',
+                ),
+            ),
+            array(
+                "206\r\n",
+                array(
+                    'command' => '206',
+                    'code' => 'RPL_TRACESERVER',
+                ),
+            ),
+            array(
+                "208\r\n",
+                array(
+                    'command' => '208',
+                    'code' => 'RPL_TRACENEWTYPE',
+                ),
+            ),
+            array(
+                "261\r\n",
+                array(
+                    'command' => '261',
+                    'code' => 'RPL_TRACELOG',
+                ),
+            ),
+            array(
+                "211\r\n",
+                array(
+                    'command' => '211',
+                    'code' => 'RPL_STATSLINKINFO',
+                ),
+            ),
+            array(
+                "212\r\n",
+                array(
+                    'command' => '212',
+                    'code' => 'RPL_STATSCOMMANDS',
+                ),
+            ),
+            array(
+                "213\r\n",
+                array(
+                    'command' => '213',
+                    'code' => 'RPL_STATSCLINE',
+                ),
+            ),
+            array(
+                "214\r\n",
+                array(
+                    'command' => '214',
+                    'code' => 'RPL_STATSNLINE',
+                ),
+            ),
+            array(
+                "215\r\n",
+                array(
+                    'command' => '215',
+                    'code' => 'RPL_STATSILINE',
+                ),
+            ),
+            array(
+                "216\r\n",
+                array(
+                    'command' => '216',
+                    'code' => 'RPL_STATSKLINE',
+                ),
+            ),
+            array(
+                "218\r\n",
+                array(
+                    'command' => '218',
+                    'code' => 'RPL_STATSYLINE',
+                ),
+            ),
+            array(
+                "219\r\n",
+                array(
+                    'command' => '219',
+                    'code' => 'RPL_ENDOFSTATS',
+                ),
+            ),
+            array(
+                "241\r\n",
+                array(
+                    'command' => '241',
+                    'code' => 'RPL_STATSLLINE',
+                ),
+            ),
+            array(
+                "242\r\n",
+                array(
+                    'command' => '242',
+                    'code' => 'RPL_STATSUPTIME',
+                ),
+            ),
+            array(
+                "243\r\n",
+                array(
+                    'command' => '243',
+                    'code' => 'RPL_STATSOLINE',
+                ),
+            ),
+            array(
+                "244\r\n",
+                array(
+                    'command' => '244',
+                    'code' => 'RPL_STATSHLINE',
+                ),
+            ),
+            array(
+                "221\r\n",
+                array(
+                    'command' => '221',
+                    'code' => 'RPL_UMODEIS',
+                ),
+            ),
+            array(
+                "251\r\n",
+                array(
+                    'command' => '251',
+                    'code' => 'RPL_LUSERCLIENT',
+                ),
+            ),
+            array(
+                "252\r\n",
+                array(
+                    'command' => '252',
+                    'code' => 'RPL_LUSEROP',
+                ),
+            ),
+            array(
+                "253\r\n",
+                array(
+                    'command' => '253',
+                    'code' => 'RPL_LUSERUNKNOWN',
+                ),
+            ),
+            array(
+                "254\r\n",
+                array(
+                    'command' => '254',
+                    'code' => 'RPL_LUSERCHANNELS',
+                ),
+            ),
+            array(
+                "255\r\n",
+                array(
+                    'command' => '255',
+                    'code' => 'RPL_LUSERME',
+                ),
+            ),
+            array(
+                "256\r\n",
+                array(
+                    'command' => '256',
+                    'code' => 'RPL_ADMINME',
+                ),
+            ),
+            array(
+                "257\r\n",
+                array(
+                    'command' => '257',
+                    'code' => 'RPL_ADMINLOC1',
+                ),
+            ),
+            array(
+                "258\r\n",
+                array(
+                    'command' => '258',
+                    'code' => 'RPL_ADMINLOC2',
+                ),
+            ),
+            array(
+                "259\r\n",
+                array(
+                    'command' => '259',
+                    'code' => 'RPL_ADMINEMAIL',
+                ),
+            ),
             array(
                 "999\r\n",
                 array(
