@@ -2488,6 +2488,24 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'code' => 'Unknown reply',
                 ),
             ),
+
+            // Freenode uses an invalid hostname in some server responses
+            array(
+                ":services. 328 Phergie3 #laravel :http://laravel.com\r\n",
+                array(
+                    'prefix' => ':services.',
+                    'servername' => 'services.',
+                    'command' => '328',
+                    'params' => array(
+                        1 => 'Phergie3',
+                        2 => '#laravel',
+                        3 => 'http://laravel.com',
+                        'all' => 'Phergie3 #laravel :http://laravel.com',
+                    ),
+                    'message' => ":services. 328 Phergie3 #laravel :http://laravel.com\r\n",
+                    'code' => 'Unknown reply',
+                ),
+            ),
         );
 
         foreach ($data as $key => $value) {
