@@ -2162,7 +2162,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 array(
                     'prefix' => ':john!~jsmith@example.com',
                     'nick' => 'john',
-                    'user' => '~jsmith@example.com',
+                    'user' => '~jsmith',
+                    'host' => 'example.com',
                     'command' => 'PRIVMSG',
                     'params' => array(
                         'all' => "#test :\001ACTION test\001",
