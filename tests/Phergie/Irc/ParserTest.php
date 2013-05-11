@@ -2507,6 +2507,24 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'code' => 'Unknown reply',
                 ),
             ),
+
+            // Freenode doesn't prefix the PART channels parameter with a colon
+            array(
+                ":julien-c!~julien-c@tru75-6-82-240-32-161.fbx.proxad.net PART #laravel\r\n",
+                array(
+                    'prefix' => ':julien-c!~julien-c@tru75-6-82-240-32-161.fbx.proxad.net',
+                    'nick' => 'julien-c',
+                    'user' => '~julien-c',
+                    'host' => 'tru75-6-82-240-32-161.fbx.proxad.net',
+                    'command' => 'PART',
+                    'params' => array(
+                        'channels' => '#laravel',
+                        'all' => '#laravel',
+                    ),
+                    'targets' => array('#laravel'),
+                    'message' => ":julien-c!~julien-c@tru75-6-82-240-32-161.fbx.proxad.net PART #laravel\r\n",
+                ),
+            ),
         );
 
         foreach ($data as $key => $value) {

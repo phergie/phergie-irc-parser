@@ -201,9 +201,9 @@ class Parser implements ParserInterface
         $null = '\\x00';
         $command = "(?P<command>[$letter]+|[$number]{3})";
         $middle = "(?: [^ $null$crlf:][^ $null$crlf]*)";
-        $trailing = "(?: :[^$null$crlf]*)";
-        // Last alternation provides for relaxed parsing of messages without trailing parameters properly demarcated
-        $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing)|(?:$middle{0,15}))";
+        // ? provides for relaxed parsing of messages without trailing parameters properly demarcated
+        $trailing = "(?: :?[^$null$crlf]*)";
+        $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
         $name = "[$letter](?:[$letter$number\\-]*[$letter$number])?";
         $host = "$name(?:\\.(?:$name)*)+";
         $nick = "(?:[$letter][$letter$number\\-\\[\\]\\\\`^{}\\_]*)";
@@ -221,44 +221,44 @@ class Parser implements ParserInterface
 
         $this->params = array(
             'PASS'     => "/^(?:(?P<password>$trailing))$/",
-            'NICK'     => "/^(?:(?P<nickname>$trailing|$middle)(?P<hopcount>$trailing)?)$/",
+            'NICK'     => "/^(?:(?P<nickname>$middle|$trailing)(?P<hopcount>$trailing)?)$/",
             'USER'     => "/^(?:(?P<username>$middle)(?P<hostname>$middle)(?P<servername>$middle)(?P<realname>$trailing))$/",
             'SERVER'   => "/^(?:(?P<servername>$middle)(?P<hopcount>$middle)(?P<info>$trailing))$/",
             'OPER'     => "/^(?:(?P<user>$middle)(?P<password>$trailing))$/",
             'QUIT'     => "/^(?:(?P<message>$trailing)?)$/",
             'SQUIT'    => "/^(?:(?P<server>$middle)(?P<comment>$trailing))$/",
-            'JOIN'     => "/^(?:(?P<channels>$trailing|$middle)(?P<keys>$trailing)?)$/",
+            'JOIN'     => "/^(?:(?P<channels>$middle|$trailing)(?P<keys>$trailing)?)$/",
             'PART'     => "/^(?:(?P<channels>$trailing))$/",
-            'MODE'     => "/^(?:(?P<target>$middle)(?P<mode>$trailing|$middle)(?P<param>$trailing)?)$/",
-            'TOPIC'    => "/^(?:(?P<channel>$trailing|$middle)(?P<topic>$trailing)?)$/",
+            'MODE'     => "/^(?:(?P<target>$middle)(?P<mode>$middle|$trailing)(?P<param>$trailing)?)$/",
+            'TOPIC'    => "/^(?:(?P<channel>$middle|$trailing)(?P<topic>$trailing)?)$/",
             'NAMES'    => "/^(?:(?P<channels>$trailing))$/",
             'LIST'     => "/^(?:(?:(?P<channels>$trailing)|$middle)?(?P<server>$trailing)?)$/",
             'INVITE'   => "/^(?:(?P<nickname>$middle)(?P<channel>$trailing))$/",
-            'KICK'     => "/^(?:(?P<channel>$middle)(?P<user>$trailing|$middle)(?P<comment>$trailing)?)$/",
+            'KICK'     => "/^(?:(?P<channel>$middle)(?P<user>$middle|$trailing)(?P<comment>$trailing)?)$/",
             'VERSION'  => "/^(?:(?P<server>$trailing)?)$/",
-            'STATS'    => "/^(?:(?P<query>$trailing|$middle)(?P<server>$trailing)?)$/",
+            'STATS'    => "/^(?:(?P<query>$middle|$trailing)(?P<server>$trailing)?)$/",
             'LINKS'    => "/^(?:(?P<remoteserver>$middle)?(?P<servermask>$trailing)?)$/",
             'TIME'     => "/^(?:(?P<server>$trailing)?)$/",
-            'CONNECT'  => "/^(?:(?P<targetserver>$trailing|$middle)(?P<port>$trailing|$middle)?(?P<remoteserver>$trailing)?)$/",
+            'CONNECT'  => "/^(?:(?P<targetserver>$middle|$trailing)(?P<port>$middle|$trailing)?(?P<remoteserver>$trailing)?)$/",
             'TRACE'    => "/^(?:(?P<server>$trailing)?)$/",
             'ADMIN'    => "/^(?:(?P<server>$trailing)?)$/",
             'INFO'     => "/^(?:(?P<server>$trailing)?)$/",
             'PRIVMSG'  => "/^(?:(?P<receivers>$middle)(?P<text>$trailing))$/S",
             'NOTICE'   => "/^(?:(?P<nickname>$middle)(?P<text>$trailing))$/S",
-            'WHO'      => "/^(?:(?P<name>$trailing|$middle)(?P<o>$trailing)?)$/",
+            'WHO'      => "/^(?:(?P<name>$middle|$trailing)(?P<o>$trailing)?)$/",
             'WHOIS'    => "/^(?:(?P<server>$middle)?(?P<nickmasks>$trailing))$/",
-            'WHOWAS'   => "/^(?:(?P<nickname>$trailing|$middle)(?P<count>$trailing|$middle)?(?P<server>$trailing)?)$/",
+            'WHOWAS'   => "/^(?:(?P<nickname>$middle|$trailing)(?P<count>$middle|$trailing)?(?P<server>$trailing)?)$/",
             'KILL'     => "/^(?:(?P<nickname>$middle)(?P<comment>$trailing))$/",
-            'PING'     => "/^(?:(?P<server1>$trailing|$middle)(?P<server2>$trailing)?)$/",
-            'PONG'     => "/^(?:(?P<daemon>$trailing|$middle)(?P<daemon2>$trailing)?)$/",
+            'PING'     => "/^(?:(?P<server1>$middle|$trailing)(?P<server2>$trailing)?)$/",
+            'PONG'     => "/^(?:(?P<daemon>$middle|$trailing)(?P<daemon2>$trailing)?)$/",
             'ERROR'    => "/^(?:(?P<message>$trailing))$/",
             'AWAY'     => "/^(?:(?P<message>$trailing)?)$/",
             'REHASH'   => "/^$/",
             'RESTART'  => "/^$/",
-            'SUMMON'   => "/^(?:(?P<user>$trailing|$middle)(?P<server>$trailing)?)$/",
+            'SUMMON'   => "/^(?:(?P<user>$middle|$trailing)(?P<server>$trailing)?)$/",
             'USERS'    => "/^(?:(?P<server>$trailing)?)$/",
             'WALLOPS'  => "/^(?:(?P<text>$trailing))$/",
-            'USERHOST' => "/^(?:(?P<nickname1>$trailing|$middle)(?P<nickname2>$trailing|$middle)?(?P<nickname3>$trailing|$middle)?(?P<nickname4>$trailing|$middle)?(?P<nickname5>$trailing)?)$/",
+            'USERHOST' => "/^(?:(?P<nickname1>$middle|$trailing)(?P<nickname2>$middle|$trailing)?(?P<nickname3>$middle|$trailing)?(?P<nickname4>$middle|$trailing)?(?P<nickname5>$trailing)?)$/",
             'ISON'     => "/^(?:(?P<nicknames>(?:$middle )*$trailing))$/",
         );
 
