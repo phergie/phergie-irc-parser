@@ -81,4 +81,8 @@ Released under the BSD License. See `LICENSE`.
 
 ## Community
 
-Check out #phergie on irc.freenode.net.
+Check out #phergie on irc.freenode.net or e-mail us at [team@phergie.org](mailto:team@phergie.org).
+
+## Related Projects
+
+* [phergie/phergie-irc-client-react](http://github.com/phergie/phergie-irc-client-react)
