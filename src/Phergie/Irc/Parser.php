@@ -198,6 +198,7 @@ class Parser implements ParserInterface
         $crlf = "\r\n";
         $letter = 'a-zA-Z';
         $number = '0-9';
+        $special = preg_quote('[]\`_^{|}');
         $null = '\\x00';
         $command = "(?P<command>[$letter]+|[$number]{3})";
         $middle = "(?: [^ $null$crlf:][^ $null$crlf]*)";
@@ -206,7 +207,7 @@ class Parser implements ParserInterface
         $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
         $name = "[$letter](?:[$letter$number\\-]*[$letter$number])?";
         $host = "$name(?:\\.(?:$name)*)+";
-        $nick = "(?:[$letter][$letter$number\\-\\[\\]\\\\`^{}\\_]*)";
+        $nick = "(?:[$letter$special][$letter$number$special-]*)";
         $user = "(?:[^ $null$crlf]+)";
         $prefix = "(?:(?P<servername>$host)|(?:(?P<nick>$nick)(?:!(?P<user>$user))?(?:@(?P<host>$host))?))";
         $message = "(?P<prefix>:$prefix )?$command$params$crlf";

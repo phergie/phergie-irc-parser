@@ -2525,6 +2525,46 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'message' => ":julien-c!~julien-c@tru75-6-82-240-32-161.fbx.proxad.net PART #laravel\r\n",
                 ),
             ),
+
+            // Rizon allows nicks valid under RFC 2812, but not RFC 1459
+            array(
+                "PRIVMSG ____ :test\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => '____',
+                        'text' => 'test',
+                        'all' => '____ :test',
+                    ),
+                    'targets' => array('____'),
+                ),
+            ),
+
+            array(
+                "PRIVMSG |blah :test\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => '|blah',
+                        'text' => 'test',
+                        'all' => '|blah :test',
+                    ),
+                    'targets' => array('|blah'),
+                ),
+            ),
+
+            array(
+                "PRIVMSG hello|there :test\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'hello|there',
+                        'text' => 'test',
+                        'all' => 'hello|there :test',
+                    ),
+                    'targets' => array('hello|there'),
+                ),
+            ),
         );
 
         foreach ($data as $key => $value) {
