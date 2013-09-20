@@ -2470,6 +2470,24 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 )
             ),
 
+            // Malformed CTCP command
+            array(
+                "PRIVMSG victim :\001ACTIONlooks\001\r\n",
+                array(
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'victim',
+                        'text' => "\001ACTIONlooks\001",
+                        'all' => "victim :\001ACTIONlooks\001",
+                    ),
+                    'targets' => array('victim'),
+                    'message' => "PRIVMSG victim :\001ACTIONlooks\001\r\n",
+                    'ctcp' => array(
+                        'command' => 'ACTIONlooks'
+                    ),
+                ),
+            ),
+
             // Freenode doesn't properly demarcate trailing command parameters in some cases
             array(
                 ":pratchett.freenode.net 004 Phergie3 pratchett.freenode.net ircd-seven-1.1.3 DOQRSZaghilopswz CFILMPQbcefgijklmnopqrstvz bkloveqjfI\r\n",

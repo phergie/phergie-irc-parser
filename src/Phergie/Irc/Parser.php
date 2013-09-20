@@ -364,7 +364,8 @@ class Parser implements ParserInterface
                 case 'NOTICE':
                     if ($params && preg_match($this->ctcp, end($params), $ctcp)) {
                         $parsed['ctcp'] = $this->removeIntegerKeys($ctcp);
-                        if (!empty($parsed['ctcp']['params'])) {
+                        if (isset($this->ctcpParams[$parsed['ctcp']['command']])
+                            && !empty($parsed['ctcp']['params'])) {
                             $ctcpParams = ltrim($parsed['ctcp']['params']);
                             preg_match($this->ctcpParams[$parsed['ctcp']['command']], $ctcpParams, $ctcpParsed);
                             $parsed['ctcp']['params'] = array_merge(
