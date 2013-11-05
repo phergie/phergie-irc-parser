@@ -229,7 +229,7 @@ class Parser implements ParserInterface
             'QUIT'     => "/^(?:(?P<message>$trailing)?)$/",
             'SQUIT'    => "/^(?:(?P<server>$middle)(?P<comment>$trailing))$/",
             'JOIN'     => "/^(?:(?P<channels>$middle|$trailing)(?P<keys>$trailing)?)$/",
-            'PART'     => "/^(?:(?P<channels>$trailing))$/",
+            'PART'     => "/^(?:(?P<channels>$middle|$trailing)(?P<message>$trailing)?)$/",
             'MODE'     => "/^(?:(?P<target>$middle)(?P<mode>$middle|$trailing)(?P<param>$trailing)?)$/",
             'TOPIC'    => "/^(?:(?P<channel>$middle|$trailing)(?P<topic>$trailing)?)$/",
             'NAMES'    => "/^(?:(?P<channels>$trailing))$/",

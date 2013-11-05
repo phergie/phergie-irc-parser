@@ -391,7 +391,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // PART (RFC 1459 Section 4.2.2)
+            // PART (RFC 2182 Section 3.2.2)
             array(
                 "PART :#twilight_zone\r\n",
                 array(
@@ -413,6 +413,23 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'all' => '#oz-ops,&group5',
                     ),
                     'targets' => array('#oz-ops', '&group5'),
+                ),
+            ),
+
+            array(
+                ":WiZ!jto@tolsun.oulu.fi PART #playzone :I lost\r\n",
+                array(
+                    'prefix' => ':WiZ!jto@tolsun.oulu.fi',
+                    'nick' => 'WiZ',
+                    'user' => 'jto',
+                    'host' => 'tolsun.oulu.fi',
+                    'command' => 'PART',
+                    'params' => array(
+                        'channels' => '#playzone',
+                        'message' => 'I lost',
+                        'all' => '#playzone :I lost',
+                    ),
+                    'targets' => array('#playzone'),
                 ),
             ),
 
