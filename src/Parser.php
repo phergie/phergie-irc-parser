@@ -344,15 +344,15 @@ class Parser implements ParserInterface
                 case 'MODE':
                     if (preg_match('/^' . $this->channel . '$/', $params['target'])) {
                         $params['channel'] = $params['target'];
-                        if (preg_match('/[ov]/', $params['mode'])) {
-                            $params['user'] = $params['param'];
-                        } elseif (strpos($params['mode'], 'l') !== false) {
+                        if (strpos($params['mode'], 'l') !== false) {
                             $params['limit'] = $params['param'];
                         } elseif (strpos($params['mode'], 'b') !== false
                             && !empty($params['param'])) {
                             $params['banmask'] = $params['param'];
                         } elseif (strpos($params['mode'], 'k') !== false) {
                             $params['key'] = $params['param'];
+                        } elseif (isset($params['param'])) {
+                            $params['user'] = $params['param'];
                         }
                     } else {
                         $params['user'] = $params['target'];
