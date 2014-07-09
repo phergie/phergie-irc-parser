@@ -8,7 +8,9 @@
  * @package Phergie\Irc
  */
 
-namespace Phergie\Irc;
+namespace Phergie\Irc\Tests;
+
+use Phergie\Irc\Parser;
 
 /**
  * Tests for \Phergie\Irc\Parser.

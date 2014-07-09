@@ -21,6 +21,11 @@
             "Phergie\\Irc\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Phergie\\Irc\\Tests\\": "tests"
+        }
+    },
     "repositories": [
         {
             "type": "vcs",
