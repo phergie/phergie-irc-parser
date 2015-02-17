@@ -385,7 +385,7 @@ class Parser implements ParserInterface
             if (isset($this->replies[$command])) {
                 $parsed['code'] = $this->replies[$command];
             } else {
-                $parsed['code'] = 'Unknown reply';
+                $parsed['code'] = $command;
             }
             if (!empty($parsed['params'])) {
                 $all = $this->strip($parsed['params']);
