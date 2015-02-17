@@ -2171,7 +2171,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 "999\r\n",
                 array(
                     'command' => '999',
-                    'code' => 'Unknown reply',
+                    'code' => '999',
                 ),
             ),
             
@@ -2523,7 +2523,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         6 => 'bkloveqjfI',
                         'all' => 'Phergie3 pratchett.freenode.net ircd-seven-1.1.3 DOQRSZaghilopswz CFILMPQbcefgijklmnopqrstvz bkloveqjfI',
                     ),
-                    'code' => 'Unknown reply',
+                    'code' => '004',
                 ),
             ),
 
@@ -2541,7 +2541,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'all' => 'Phergie3 #laravel :http://laravel.com',
                     ),
                     'message' => ":services. 328 Phergie3 #laravel :http://laravel.com\r\n",
-                    'code' => 'Unknown reply',
+                    'code' => '328',
                 ),
             ),
 
