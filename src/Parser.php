@@ -19,6 +19,13 @@ namespace Phergie\Irc;
 class Parser implements ParserInterface
 {
     /**
+     * The cariage return line feed characters
+     *
+     * @var string
+     */
+    protected $crlf;
+
+    /**
      * Regular expression to match a single IRC message
      *
      * @var string
@@ -195,25 +202,25 @@ class Parser implements ParserInterface
      */
     public function __construct()
     {
-        $crlf = "\r\n";
+        $this->crlf = "\r\n";
         $letter = 'a-zA-Z';
         $number = '0-9';
         $special = preg_quote('[]\`_^{|}');
         $null = '\\x00';
         $command = "(?P<command>[$letter]+|[$number]{3})";
-        $middle = "(?: [^ $null$crlf:][^ $null$crlf]*)";
+        $middle = "(?: [^ $null$this->crlf:][^ $null$this->crlf]*)";
         // ? provides for relaxed parsing of messages without trailing parameters properly demarcated
-        $trailing = "(?: :?[^$null$crlf]*)";
+        $trailing = "(?: :?[^$null$this->crlf]*)";
         $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
         $name = "[$letter](?:[$letter$number\\-]*[$letter$number])?";
         $host = "$name(?:\\.(?:$name)*)+";
         $nick = "(?:[$letter$special][$letter$number$special-]*)";
-        $user = "(?:[^ $null$crlf]+)";
+        $user = "(?:[^ $null$this->crlf]+)";
         $prefix = "(?:(?P<servername>$host)|(?:(?P<nick>$nick)(?:!(?P<user>$user))?(?:@(?P<host>$host))?))";
-        $message = "(?P<prefix>:$prefix )?$command$params$crlf";
+        $message = "(?P<prefix>:$prefix )?$command$params$this->crlf";
         $this->message = "/^$message/SU";
 
-        $chstring = "[^ \a$null$crlf,]+";
+        $chstring = "[^ \a$null$this->crlf,]+";
         $channel = $this->channel = "(?:[#&]$chstring)";
         $mask = "(?:[#$]$chstring)";
         $to = "(?:$channel|(?:$user@$host)|$nick|$mask)";
@@ -317,6 +324,9 @@ class Parser implements ParserInterface
      */
     public function parse($message)
     {
+        // Replace multiple crlf by single ones
+        $message = preg_replace("/($this->crlf){2,}/", $this->crlf, $message);
+
         // Extract the first full message or bail if there is none
         if (!preg_match($this->message, $message, $parsed)) {
             return null;

@@ -110,6 +110,48 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 null,
             ),
 
+            // Only CRLF
+            array(
+                "\r\n",
+                null
+            ),
+
+            // Only multiple CRLF
+            array(
+                "\r\n\r\n\r\n",
+                null
+            ),
+
+            // Double CRLF
+            array(
+                "PRIVMSG doubleCRLF :test\r\n\r\n",
+                array(
+                        'command' => 'PRIVMSG',
+                        'params' => array(
+                                'receivers' => 'doubleCRLF',
+                                'text' => 'test',
+                                'all' => 'doubleCRLF :test',
+                        ),
+                        'targets' => array('doubleCRLF'),
+                        'message' => "PRIVMSG doubleCRLF :test\r\n",
+                ),
+            ),
+
+            // Multiple CRLF
+            array(
+                "PRIVMSG multipleCRLF :test\r\n\r\n\r\n",
+                array(
+                        'command' => 'PRIVMSG',
+                        'params' => array(
+                                'receivers' => 'multipleCRLF',
+                                'text' => 'test',
+                                'all' => 'multipleCRLF :test',
+                        ),
+                        'targets' => array('multipleCRLF'),
+                        'message' => "PRIVMSG multipleCRLF :test\r\n",
+                ),
+            ),
+
             // Data past the first message should be stored as 'tail'
             array(
                 "USER guest tolmoon tolsun :Ronnie Regan\r\nNICK :Wiz",
