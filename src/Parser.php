@@ -329,15 +329,6 @@ class Parser implements ParserInterface
         // Replace multiple crlf by single ones
         $message = preg_replace("/($this->crlf){2,}/", $this->crlf, $message);
 
-        if (strpos($message, 'doublecrlf') !== false) {
-            var_dump([
-                    'message' => $original,
-                    'match' => "/($this->crlf){2,}/",
-                    'replace' => $this->crlf,
-                    'result' => $message,
-            ]);
-        }
-
         // Extract the first full message or bail if there is none
         if (!preg_match($this->message, $message, $parsed)) {
             return null;
