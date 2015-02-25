@@ -324,8 +324,6 @@ class Parser implements ParserInterface
      */
     public function parse($message)
     {
-        $original = $message;
-
         // Replace multiple crlf by single ones
         $message = preg_replace("/($this->crlf){2,}/", $this->crlf, $message);
 
