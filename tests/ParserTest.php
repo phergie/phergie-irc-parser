@@ -1338,6 +1338,18 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            // PROTOCTL
+            array(
+                "PROTOCTL NAMESX\r\n",
+                array(
+                    'command' => 'PROTOCTL',
+                    'params' => array(
+                        'proto' => 'NAMESX',
+                        'all' => 'NAMESX',
+                    ),
+                ),
+            ),
+
             // Error replies (RFC 1459 Section 6.1)
             array(
                 "401\r\n",

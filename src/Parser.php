@@ -188,6 +188,7 @@ class Parser implements ParserInterface
         '257' => 'RPL_ADMINLOC1',
         '258' => 'RPL_ADMINLOC2',
         '259' => 'RPL_ADMINEMAIL',
+        '005' => 'RPL_ISUPPORT',
     );
 
     /**
@@ -261,6 +262,7 @@ class Parser implements ParserInterface
             'WALLOPS'  => "/^(?:(?P<text>$trailing))$/",
             'USERHOST' => "/^(?:(?P<nickname1>$middle|$trailing)(?P<nickname2>$middle|$trailing)?(?P<nickname3>$middle|$trailing)?(?P<nickname4>$middle|$trailing)?(?P<nickname5>$trailing)?)$/",
             'ISON'     => "/^(?:(?P<nicknames>(?:$middle )*$trailing))$/",
+            'PROTOCTL' => "/^(?:()(?P<proto>$trailing))$/",
         );
 
         $xdelim = "\001";
