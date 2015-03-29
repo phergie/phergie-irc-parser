@@ -390,17 +390,22 @@ class Parser implements ParserInterface
                 $parsed['code'] = $command;
             }
             if (!empty($parsed['params'])) {
-                $all = $this->strip($parsed['params']);
-                if (strpos($parsed['params'], ' :') !== false) {
-                    list($head, $tail) = explode(' :', $parsed['params'], 2);
-                } else {
-                    $head = $parsed['params'];
-                    $tail = '';
+                // Slice off the target from the front of the reply
+                $temp = explode(' ', ltrim($parsed['params']), 2);
+                $parsed['target'] = array_shift($temp);
+                if ($parsed['params'] = (!empty($temp)) ? (' ' . array_shift($temp)) : '') {
+                    $all = $this->strip($parsed['params']);
+                    if (strpos($parsed['params'], ' :') !== false) {
+                        list($head, $tail) = explode(' :', $parsed['params'], 2);
+                    } else {
+                        $head = $parsed['params'];
+                        $tail = '';
+                    }
+                    $params = explode(' ', $head);
+                    $params[] = $tail;
+                    $parsed['params'] = array_filter($params);
+                    $parsed['params']['all'] = $all;
                 }
-                $params = explode(' ', $head);
-                $params[] = $tail;
-                $parsed['params'] = array_filter($params);
-                $parsed['params']['all'] = $all;
             }
         }
 
