@@ -231,7 +231,7 @@ class Parser implements ParserInterface
             'SQUIT'    => "/^(?:(?P<server>$middle)(?P<comment>$trailing))$/",
             'JOIN'     => "/^(?:(?P<channels>$middle|$trailing)(?P<keys>$trailing)?)$/",
             'PART'     => "/^(?:(?P<channels>$middle|$trailing)(?P<message>$trailing)?)$/",
-            'MODE'     => "/^(?:(?P<target>$middle)(?P<mode>$middle|$trailing)(?P<param>$trailing)?)$/",
+            'MODE'     => "/^(?:(?P<target>$middle)(?P<mode>$middle|$trailing)(?P<params>$trailing)?)$/",
             'TOPIC'    => "/^(?:(?P<channel>$middle|$trailing)(?P<topic>$trailing)?)$/",
             'NAMES'    => "/^(?:(?P<channels>$trailing))$/",
             'LIST'     => "/^(?:(?:(?P<channels>$trailing)|$middle)?(?P<server>$trailing)?)$/",
@@ -349,20 +349,31 @@ class Parser implements ParserInterface
                 case 'MODE':
                     if (preg_match('/^' . $this->channel . '$/', $params['target'])) {
                         $params['channel'] = $params['target'];
-                        if (strpos($params['mode'], 'l') !== false) {
-                            $params['limit'] = $params['param'];
-                        } elseif (strpos($params['mode'], 'b') !== false
-                            && !empty($params['param'])) {
-                            $params['banmask'] = $params['param'];
-                        } elseif (strpos($params['mode'], 'k') !== false) {
-                            $params['key'] = $params['param'];
-                        } elseif (isset($params['param'])) {
-                            $params['user'] = $params['param'];
+
+                        /* Assign the value of $params['params'] to a named parameter if
+                         * only one channel mode is being set.
+                         * This functionality is DEPRECATED, and will not occur if more than one
+                         * channel mode is being set. Use $params['params'] instead. */
+                        if (strlen($params['mode']) == 2 && isset($params['params'])) {
+                            switch ($params['mode']{1}) {
+                                case 'l':
+                                    $params['limit'] = $params['params'];
+                                    break;
+                                case 'b':
+                                    $params['banmask'] = $params['params'];
+                                    break;
+                                case 'k':
+                                    $params['key'] = $params['params'];
+                                    break;
+                                default:
+                                    $params['user'] = $params['params'];
+                                    break;
+                            }
                         }
                     } else {
                         $params['user'] = $params['target'];
                     }
-                    unset($params['target'], $params['param']);
+                    unset($params['target']);
                     break;
                 // Handle CTCP messages
                 case 'PRIVMSG':
