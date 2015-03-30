@@ -2519,6 +2519,37 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            // Commands containing individual CR or LF characters
+            array(
+                ":server.name 372 BotNick :Who left a carriage return \r in here?\r\n",
+                array(
+                    'prefix' => ':server.name',
+                    'servername' => 'server.name',
+                    'command' => '372',
+                    'params' => array(
+                        1 => "Who left a carriage return \r in here?",
+                        'all' => "Who left a carriage return \r in here?",
+                    ),
+                    'code' => 'RPL_MOTD',
+                    'target' => 'BotNick',
+                ),
+            ),
+
+            array(
+                ":server.name 372 BotNick :Who left a carriage return \n in here?\r\n",
+                array(
+                    'prefix' => ':server.name',
+                    'servername' => 'server.name',
+                    'command' => '372',
+                    'params' => array(
+                        1 => "Who left a carriage return \n in here?",
+                        'all' => "Who left a carriage return \n in here?",
+                    ),
+                    'code' => 'RPL_MOTD',
+                    'target' => 'BotNick',
+                ),
+            ),
+
             // Freenode doesn't properly demarcate trailing command parameters in some cases
             array(
                 ":pratchett.freenode.net 004 Phergie3 pratchett.freenode.net ircd-seven-1.1.3 DOQRSZaghilopswz CFILMPQbcefgijklmnopqrstvz bkloveqjfI\r\n",

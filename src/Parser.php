@@ -197,14 +197,15 @@ class Parser implements ParserInterface
     public function __construct()
     {
         $crlf = "\r\n";
+        $not_crlf = "(?:(?:(?<!\r)\n)|(\r[^\n]))";
         $letter = 'a-zA-Z';
         $number = '0-9';
         $special = preg_quote('[]\`_^{|}');
         $null = '\\x00';
         $command = "(?P<command>[$letter]+|[$number]{3})";
-        $middle = "(?: [^ $null$crlf:][^ $null$crlf]*)";
+        $middle = "(?: (?:[^ $null:]|$not_crlf)(?:[^ $null]|$not_crlf)*)";
         // ? provides for relaxed parsing of messages without trailing parameters properly demarcated
-        $trailing = "(?: :?[^$null$crlf]*)";
+        $trailing = "(?: :?(?:[^$null]|$not_crlf)*)";
         $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
         $name = "[$letter](?:[$letter$number\\-]*[$letter$number])?";
         $host = "$name(?:\\.(?:$name)*)+";
@@ -214,7 +215,7 @@ class Parser implements ParserInterface
         $message = "(?P<prefix>:$prefix )?$command$params$crlf";
         $this->message = "/^$message/SU";
 
-        $chstring = "[^ \a$null$crlf,]+";
+        $chstring = "(?:[^ \a$null,]|$not_crlf)+";
         $channel = $this->channel = "(?:[#&]$chstring)";
         $mask = "(?:[#$]$chstring)";
         $to = "(?:$channel|(?:$user@$host)|$nick|$mask)";
