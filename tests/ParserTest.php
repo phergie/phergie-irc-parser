@@ -456,6 +456,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         'channel' => '#Finnish',
                         'mode' => '+o',
+                        'params' => 'Kilroy',
                         'user' => 'Kilroy',
                         'all' => '#Finnish +o :Kilroy',
                     ),
@@ -470,8 +471,37 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         'channel' => '#Finnish',
                         'mode' => '+v',
+                        'params' => 'Wiz',
                         'user' => 'Wiz',
                         'all' => '#Finnish +v :Wiz',
+                    ),
+                    'targets' => array('#Finnish'),
+                ),
+            ),
+
+            array(
+                "MODE #Finnish +ov :Kilroy Wiz\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#Finnish',
+                        'mode' => '+ov',
+                        'params' => 'Kilroy Wiz',
+                        'all' => '#Finnish +ov :Kilroy Wiz',
+                    ),
+                    'targets' => array('#Finnish'),
+                ),
+            ),
+
+            array(
+                "MODE #Finnish +mvv-v :Kilroy Wiz Angel\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#Finnish',
+                        'mode' => '+mvv-v',
+                        'params' => 'Kilroy Wiz Angel',
+                        'all' => '#Finnish +mvv-v :Kilroy Wiz Angel',
                     ),
                     'targets' => array('#Finnish'),
                 ),
@@ -497,8 +527,23 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         'channel' => '#42',
                         'mode' => '+k',
+                        'params' => 'oulu',
                         'key' => 'oulu',
                         'all' => '#42 +k :oulu',
+                    ),
+                    'targets' => array('#42'),
+                ),
+            ),
+
+            array(
+                "MODE #42 +ks :oulu\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#42',
+                        'mode' => '+ks',
+                        'params' => 'oulu',
+                        'all' => '#42 +ks :oulu',
                     ),
                     'targets' => array('#42'),
                 ),
@@ -511,8 +556,23 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         'channel' => '#eu-opers',
                         'mode' => '+l',
+                        'params' => '10',
                         'limit' => '10',
                         'all' => '#eu-opers +l :10',
+                    ),
+                    'targets' => array('#eu-opers'),
+                ),
+            ),
+
+            array(
+                "MODE #eu-opers +lL :10 #eu-opers-overflow\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#eu-opers',
+                        'mode' => '+lL',
+                        'params' => '10 #eu-opers-overflow',
+                        'all' => '#eu-opers +lL :10 #eu-opers-overflow',
                     ),
                     'targets' => array('#eu-opers'),
                 ),
@@ -538,6 +598,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         'channel' => '&oulu',
                         'mode' => '+b',
+                        'params' => '*!*@*',
                         'banmask' => '*!*@*',
                         'all' => '&oulu +b :*!*@*',
                     ),
@@ -552,8 +613,23 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         'channel' => '&oulu',
                         'mode' => '+b',
+                        'params' => '*!*@*.edu',
                         'banmask' => '*!*@*.edu',
                         'all' => '&oulu +b :*!*@*.edu',
+                    ),
+                    'targets' => array('&oulu'),
+                ),
+            ),
+
+            array(
+                "MODE &oulu +b-b :*!*@*.edu *!*@*.ac.uk\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '&oulu',
+                        'mode' => '+b-b',
+                        'params' => '*!*@*.edu *!*@*.ac.uk',
+                        'all' => '&oulu +b-b :*!*@*.edu *!*@*.ac.uk',
                     ),
                     'targets' => array('&oulu'),
                 ),
@@ -597,6 +673,34 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'all' => 'Wiz :-o',
                     ),
                     'targets' => array('Wiz'),
+                ),
+            ),
+
+            array(
+                "MODE Kilroy +s :+CcQq\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'user' => 'Kilroy',
+                        'mode' => '+s',
+                        'params' => '+CcQq',
+                        'all' => 'Kilroy +s :+CcQq',
+                    ),
+                    'targets' => array('Kilroy'),
+                ),
+            ),
+
+            array(
+                "MODE Angel +ws :+CcQq\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'user' => 'Angel',
+                        'mode' => '+ws',
+                        'params' => '+CcQq',
+                        'all' => 'Angel +ws :+CcQq',
+                    ),
+                    'targets' => array('Angel'),
                 ),
             ),
 
