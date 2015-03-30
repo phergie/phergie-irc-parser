@@ -2519,7 +2519,23 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // Commands containing individual CR or LF characters
+            // Individual NUL, CR, or LF characters are stripped out
+            array(
+                ":server.name 372 BotNick :Who left a null byte \0 in here?\r\n",
+                array(
+                    'prefix' => ':server.name',
+                    'servername' => 'server.name',
+                    'command' => '372',
+                    'params' => array(
+                        1 => "Who left a null byte  in here?",
+                        'all' => "Who left a null byte  in here?",
+                    ),
+                    'code' => 'RPL_MOTD',
+                    'target' => 'BotNick',
+                    'message' => ":server.name 372 BotNick :Who left a null byte  in here?\r\n",
+                ),
+            ),
+
             array(
                 ":server.name 372 BotNick :Who left a carriage return \r in here?\r\n",
                 array(
@@ -2527,26 +2543,28 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'servername' => 'server.name',
                     'command' => '372',
                     'params' => array(
-                        1 => "Who left a carriage return \r in here?",
-                        'all' => "Who left a carriage return \r in here?",
+                        1 => "Who left a carriage return  in here?",
+                        'all' => "Who left a carriage return  in here?",
                     ),
                     'code' => 'RPL_MOTD',
                     'target' => 'BotNick',
+                    'message' => ":server.name 372 BotNick :Who left a carriage return  in here?\r\n",
                 ),
             ),
 
             array(
-                ":server.name 372 BotNick :Who left a carriage return \n in here?\r\n",
+                ":server.name 372 BotNick :Who left a line feed \n in here?\r\n",
                 array(
                     'prefix' => ':server.name',
                     'servername' => 'server.name',
                     'command' => '372',
                     'params' => array(
-                        1 => "Who left a carriage return \n in here?",
-                        'all' => "Who left a carriage return \n in here?",
+                        1 => "Who left a line feed  in here?",
+                        'all' => "Who left a line feed  in here?",
                     ),
                     'code' => 'RPL_MOTD',
                     'target' => 'BotNick',
+                    'message' => ":server.name 372 BotNick :Who left a line feed  in here?\r\n",
                 ),
             ),
 
