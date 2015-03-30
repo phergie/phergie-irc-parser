@@ -197,7 +197,7 @@ class Parser implements ParserInterface
     public function __construct()
     {
         $crlf = "\r\n";
-        $not_crlf = "(?:(?:(?<!\r)\n)|(\r[^\n]))";
+        $not_crlf = "(?:(?:(?<!\r)\n)|(?:\r[^\n]))";
         $letter = 'a-zA-Z';
         $number = '0-9';
         $special = preg_quote('[]\`_^{|}');
