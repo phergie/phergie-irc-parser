@@ -2767,6 +2767,45 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'targets' => array('hello|there'),
                 ),
             ),
+
+            // Hostnames/idents
+            array(
+                ":nick!ident@123.host.com PRIVMSG target :message\r\n",
+                array(
+                    'prefix' => ':nick!ident@123.host.com',
+                    'nick' => 'nick',
+                    'user' => 'ident',
+                    'host' => '123.host.com',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'all' => 'target :message',
+                        'receivers' => 'target',
+                        'text' => 'message',
+                    ),
+                    'targets' => array('target'),
+                ),
+            ),
+
+            array(
+                ":nick!ident- PRIVMSG target :message\r\n",
+                array(
+                    'prefix' => ':nick!ident-',
+                    'nick' => 'nick',
+                    'user' => 'ident-',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'all' => 'target :message',
+                        'receivers' => 'target',
+                        'text' => 'message',
+                    ),
+                    'targets' => array('target'),
+                ),
+            ),
+
+            array(
+                ":nick!ident@- PRIVMSG target :message\r\n",
+                null,
+            ),
         );
 
         foreach ($data as $key => $value) {

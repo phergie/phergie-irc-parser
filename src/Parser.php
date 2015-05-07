@@ -206,10 +206,10 @@ class Parser implements ParserInterface
         // ? provides for relaxed parsing of messages without trailing parameters properly demarcated
         $trailing = "(?: :?[^$null$crlf]*)";
         $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
-        $name = "[$letter](?:[$letter$number\\-]*[$letter$number])?";
+        $name = "[$letter$number](?:[$letter$number\\-]*[$letter$number])?";
         $host = "$name(?:\\.(?:$name)*)+";
         $nick = "(?:[$letter$special][$letter$number$special-]*)";
-        $user = "(?:[^ $null$crlf]+)";
+        $user = "(?:[^ $null$crlf@]+)";
         $prefix = "(?:(?P<servername>$host)|(?:(?P<nick>$nick)(?:!(?P<user>$user))?(?:@(?P<host>$host))?))";
         $message = "(?P<prefix>:$prefix )?$command$params$crlf";
         $this->message = "/^$message/SU";
