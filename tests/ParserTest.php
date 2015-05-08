@@ -59,8 +59,11 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testConsume($message, $result)
     {
         $parser = new Parser;
+        $temp = $message;
         $this->assertEquals($result, $parser->consume($message));
-        if (isset($result['tail'])) {
+        if ($result === null) {
+            $this->assertEquals($message, $temp);
+        } elseif (isset($result['tail'])) {
             $this->assertEquals($message, $result['tail']);
         }
     }
