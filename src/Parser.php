@@ -207,10 +207,10 @@ class Parser implements ParserInterface
         $trailing = "(?: :?[^$null$crlf]*)";
         $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
         $name = "[$letter$number](?:[$letter$number\\-]*[$letter$number])?";
-        $host = "$name(?:\\.(?:$name)*)+";
+        $host = "$name(?:\\.(?:$name)*)*";
         $nick = "(?:[$letter$special][$letter$number$special-]*)";
         $user = "(?:[^ $null$crlf@]+)";
-        $prefix = "(?:(?P<servername>$host)|(?:(?P<nick>$nick)(?:!(?P<user>$user))?(?:@(?P<host>$host))?))";
+        $prefix = "(?:(?:(?P<nick>$nick)(?:!(?P<user>$user))?(?:@(?P<host>$host))?)|(?P<servername>$host))";
         $message = "(?P<prefix>:$prefix )?$command$params$crlf";
         $this->message = "/^$message/SU";
 
