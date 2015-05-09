@@ -2768,7 +2768,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
-            // Hostnames/idents
+            // Hostname/ident patterns
             array(
                 ":nick!ident@123.host.com PRIVMSG target :message\r\n",
                 array(
@@ -2805,6 +2805,23 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             array(
                 ":nick!ident@- PRIVMSG target :message\r\n",
                 null,
+            ),
+
+            array(
+                ":nick!ident@localhost PRIVMSG target :message\r\n",
+                array(
+                    'prefix' => ':nick!ident@localhost',
+                    'nick' => 'nick',
+                    'user' => 'ident',
+                    'host' => 'localhost',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'all' => 'target :message',
+                        'receivers' => 'target',
+                        'text' => 'message',
+                    ),
+                    'targets' => array('target'),
+                ),
             ),
         );
 
