@@ -469,7 +469,10 @@ class Parser implements ParserInterface
      */
     public function consume(&$message)
     {
-        $parsed = $this->parse($message);
+        if (($parsed = $this->parse($message)) === null) {
+            return null;
+        }
+
         $message = empty($parsed['tail']) ? '' : $parsed['tail'];
         return $parsed;
     }
