@@ -417,8 +417,10 @@ class Parser implements ParserInterface
                     }
                     $params = explode(' ', $head);
                     $params[] = $tail;
-                    $parsed['params'] = array_filter($params);
-                    $parsed['params']['all'] = $all;
+                    if ($params = array_filter($params)) {
+                        $parsed['params'] = array_combine(range(1, count($params)), $params);
+                        $parsed['params']['all'] = $all;
+                    }
                 }
             }
         }
