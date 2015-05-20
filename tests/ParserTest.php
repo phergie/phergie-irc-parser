@@ -2807,7 +2807,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
             array(
                 ":nick!ident@- PRIVMSG target :message\r\n",
-                null,
+                array(
+                    'invalid' => ":nick!ident@- PRIVMSG target :message\r\n",
+                ),
             ),
 
             array(
@@ -2831,7 +2833,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         foreach ($data as $key => $value) {
             // Assume the string to parse contains the whole message for those
             // that don't explicitly specify that the two are different
-            if (is_array($value[1]) && !isset($value[1]['message'])) {
+            if (is_array($value[1]) && !isset($value[1]['message']) && !isset($value[1]['invalid'])) {
                 $value[1]['message'] = $value[0];
             }
 

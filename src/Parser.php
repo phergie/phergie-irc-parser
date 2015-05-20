@@ -212,7 +212,7 @@ class Parser implements ParserInterface
         $user = "(?:[^ $null$crlf@]+)";
         $prefix = "(?:(?:(?P<nick>$nick)(?:!(?P<user>$user))?(?:@(?P<host>$host))?)|(?P<servername>$host))";
         $message = "(?P<prefix>:$prefix )?$command$params$crlf";
-        $this->message = "/^$message/SU";
+        $this->message = "/^$message\$/SU";
 
         $chstring = "[^ \a$null,$crlf]+";
         $channel = $this->channel = "(?:[#&]$chstring)";
@@ -319,12 +319,25 @@ class Parser implements ParserInterface
      */
     public function parse($message)
     {
+        // See if we have a full line in our buffer.
+        if (($eol = strpos($message, "\r\n")) === false) {
+            return null;
+        }
+
+        $eol += 2; // strlen("\r\n")
+        $buf = (strlen($message) > $eol) ? substr($message, $eol) : '';
+        $message = substr($message, 0, $eol);
+
         // Strip out invalid characters
         $message = preg_replace("/\\0|(?:(?<!\r)\n)|(?:\r(?!\n))/", '', $message);
 
-        // Extract the first full message or bail if there is none
+        // Parse the message, or bail if the parser deems the line to be invalid.
         if (!preg_match($this->message, $message, $parsed)) {
-            return null;
+            $parsed = array('invalid' => $message);
+            if (strlen($buf)) {
+                $parsed['tail'] = $buf;
+            }
+            return $parsed;
         }
 
         // Parse out the first full message and prefix if present
@@ -426,10 +439,7 @@ class Parser implements ParserInterface
         }
 
         // Store the remainder of the original data stream
-        $length = strlen($parsed[0]);
-        if ($length < strlen($message)) {
-            $parsed['tail'] = substr($message, $length);
-        }
+        $parsed['tail'] = $buf;
 
         // Clean up and return the response
         $parsed = $this->removeIntegerKeys($parsed);
