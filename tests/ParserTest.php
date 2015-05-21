@@ -131,6 +131,14 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            array(
+                ":this:message:is:invalid\r\nNICK :Wiz",
+                array(
+                    'invalid' => ":this:message:is:invalid\r\n",
+                    'tail' => 'NICK :Wiz',
+                ),
+            ),
+
             // PASS (RFC 1459 Section 4.1.1)
             array(
                 "PASS :secretpasswordhere\r\n",
