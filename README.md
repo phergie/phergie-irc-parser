@@ -1,6 +1,6 @@
 # phergie/phergie-irc-parser
 
-A PHP-based parser for messages conforming to the IRC protocol as described in [RFC 1459](http://irchelp.org/irchelp/rfc/rfc.html).
+A PHP-based parser for messages conforming to the IRC protocol as described in [RFC 1459](https://tools.ietf.org/html/rfc1459) and [RFC 2812](https://tools.ietf.org/html/rfc2812).
 
 [![Build Status](https://secure.travis-ci.org/phergie/phergie-irc-parser.png?branch=master)](http://travis-ci.org/phergie/phergie-irc-parser)
 
@@ -10,16 +10,15 @@ The recommended method of installation is [through composer](http://getcomposer.
 
 ```JSON
 {
-    "minimum-stability": "dev",
     "require": {
-        "phergie/phergie-irc-parser": "1.2.0"
+        "phergie/phergie-irc-parser": "~1"
     }
 }
 ```
 
 ## Design goals
 
-* Minimal dependencies: PHP 5.3.3+ with the core PCRE extension
+* Minimal dependencies: PHP 5.4.2+ with the core PCRE extension
 * Can extract messages from a real-time data stream
 * Simple easy-to-understand API
 
