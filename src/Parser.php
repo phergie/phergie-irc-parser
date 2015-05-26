@@ -407,7 +407,7 @@ class Parser implements ParserInterface
             }
 
             // Clean up and store the processed parameters
-            $params = array_merge(array('all' => $params[0]), array_filter($params));
+            $params = array_merge(array('all' => $params[0]), array_filter($params, 'strlen'));
             $params = $this->removeIntegerKeys($params);
             $parsed['params'] = $params;
         } elseif (ctype_digit($command)) {
@@ -430,8 +430,14 @@ class Parser implements ParserInterface
                     }
                     $params = explode(' ', $head);
                     $params[] = $tail;
-                    if ($params = array_filter($params)) {
+                    if ($params = array_filter($params, 'strlen')) {
                         $parsed['params'] = array_combine(range(1, count($params)), $params);
+                        if (strlen($tail)) {
+                            $parsed['params']['iterable'] = array_slice($params, 0, -1);
+                            $parsed['params']['tail'] = $tail;
+                        } else {
+                            $parsed['params']['iterable'] = array_values($params);
+                        }
                         $parsed['params']['all'] = $all;
                     }
                 }

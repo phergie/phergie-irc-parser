@@ -2642,8 +2642,10 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'servername' => 'server.name',
                     'command' => '372',
                     'params' => array(
-                        1 => "Who left a null byte  in here?",
-                        'all' => "Who left a null byte  in here?",
+                        1 => 'Who left a null byte  in here?',
+                        'iterable' => array(),
+                        'tail' => 'Who left a null byte  in here?',
+                        'all' => 'Who left a null byte  in here?',
                     ),
                     'code' => 'RPL_MOTD',
                     'target' => 'BotNick',
@@ -2658,8 +2660,10 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'servername' => 'server.name',
                     'command' => '372',
                     'params' => array(
-                        1 => "Who left a carriage return  in here?",
-                        'all' => "Who left a carriage return  in here?",
+                        1 => 'Who left a carriage return  in here?',
+                        'iterable' => array(),
+                        'tail' => 'Who left a carriage return  in here?',
+                        'all' => 'Who left a carriage return  in here?',
                     ),
                     'code' => 'RPL_MOTD',
                     'target' => 'BotNick',
@@ -2674,8 +2678,10 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'servername' => 'server.name',
                     'command' => '372',
                     'params' => array(
-                        1 => "Who left a line feed  in here?",
-                        'all' => "Who left a line feed  in here?",
+                        1 => 'Who left a line feed  in here?',
+                        'iterable' => array(),
+                        'tail' => 'Who left a line feed  in here?',
+                        'all' => 'Who left a line feed  in here?',
                     ),
                     'code' => 'RPL_MOTD',
                     'target' => 'BotNick',
@@ -2696,6 +2702,13 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         3 => 'DOQRSZaghilopswz',
                         4 => 'CFILMPQbcefgijklmnopqrstvz',
                         5 => 'bkloveqjfI',
+                        'iterable' => array(
+                            'pratchett.freenode.net',
+                            'ircd-seven-1.1.3',
+                            'DOQRSZaghilopswz',
+                            'CFILMPQbcefgijklmnopqrstvz',
+                            'bkloveqjfI',
+                        ),
                         'all' => 'pratchett.freenode.net ircd-seven-1.1.3 DOQRSZaghilopswz CFILMPQbcefgijklmnopqrstvz bkloveqjfI',
                     ),
                     'code' => '004',
@@ -2713,6 +2726,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'params' => array(
                         1 => '#laravel',
                         2 => 'http://laravel.com',
+                        'iterable' => array('#laravel'),
+                        'tail' => 'http://laravel.com',
                         'all' => '#laravel :http://laravel.com',
                     ),
                     'message' => ":services. 328 Phergie3 #laravel :http://laravel.com\r\n",
@@ -2834,6 +2849,22 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'text' => 'message',
                     ),
                     'targets' => array('target'),
+                ),
+            ),
+
+            // Check that the string '0' is not filtered out from a params list
+            array(
+                "USER myident 0 * :Ronnie Reagan\r\n",
+                array(
+                    'command' => 'USER',
+                    'params' => array(
+                        'all' => 'myident 0 * :Ronnie Reagan',
+                        'username' => 'myident',
+                        'hostname' => '0',
+                        'servername' => '*',
+                        'realname' => 'Ronnie Reagan',
+                    ),
+                    'targets' => array('myident'),
                 ),
             ),
         );
