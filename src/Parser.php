@@ -432,6 +432,12 @@ class Parser implements ParserInterface
                     $params[] = $tail;
                     if ($params = array_filter($params, 'strlen')) {
                         $parsed['params'] = array_combine(range(1, count($params)), $params);
+                        if (strlen($tail)) {
+                            $parsed['params']['iterable'] = array_slice($params, 0, -1);
+                            $parsed['params']['tail'] = $tail;
+                        } else {
+                            $parsed['params']['iterable'] = array_values($params);
+                        }
                         $parsed['params']['all'] = $all;
                     }
                 }
