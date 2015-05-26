@@ -2836,6 +2836,22 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'targets' => array('target'),
                 ),
             ),
+
+            // Check that the string '0' is not filtered out from a params list
+            array(
+                "USER myident 0 * :Ronnie Reagan\r\n",
+                array(
+                    'command' => 'USER',
+                    'params' => array(
+                        'all' => 'myident 0 * :Ronnie Reagan',
+                        'username' => 'myident',
+                        'hostname' => '0',
+                        'servername' => '*',
+                        'realname' => 'Ronnie Reagan',
+                    ),
+                    'targets' => array('myident'),
+                ),
+            ),
         );
 
         foreach ($data as $key => $value) {
