@@ -146,7 +146,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'PASS',
                     'params' => array(
                         'password' => 'secretpasswordhere',
-                        'all' => 'secretpasswordhere',
+                        'all' => ':secretpasswordhere',
                     ),
                     'targets' => array('secretpasswordhere'),
                 ),
@@ -159,7 +159,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'NICK',
                     'params' => array(
                         'nickname' => 'Wiz',
-                        'all' => 'Wiz',
+                        'all' => ':Wiz',
                     ),
                     'targets' => array('Wiz'),
                 ),
@@ -171,7 +171,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'NICK',
                     'params' => array(
                         'nickname' => 'Wiz_',
-                        'all' => 'Wiz_',
+                        'all' => ':Wiz_',
                     ),
                     'targets' => array('Wiz_'),
                 ),
@@ -198,7 +198,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'NICK',
                     'params' => array(
                         'nickname' => 'Kilroy',
-                        'all' => 'Kilroy',
+                        'all' => ':Kilroy',
                     ),
                     'targets' => array('Kilroy'),
                 ),
@@ -294,7 +294,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'QUIT',
                     'params' => array(
                         'message' => 'Gone to have lunch',
-                        'all' => 'Gone to have lunch',
+                        'all' => ':Gone to have lunch',
                     ),
                 ),
             ),
@@ -333,7 +333,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'JOIN',
                     'params' => array(
                         'channels' => '#foobar',
-                        'all' => '#foobar',
+                        'all' => ':#foobar',
                     ),
                     'targets' => array('#foobar'),
                 ),
@@ -384,7 +384,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'JOIN',
                     'params' => array(
                         'channels' => '#foo,#bar',
-                        'all' => '#foo,#bar',
+                        'all' => ':#foo,#bar',
                     ),
                     'targets' => array('#foo', '#bar'),
                 ),
@@ -398,7 +398,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'JOIN',
                     'params' => array(
                         'channels' => '#Twilight_zone',
-                        'all' => '#Twilight_zone',
+                        'all' => ':#Twilight_zone',
                     ),
                     'targets' => array('#Twilight_zone'),
                 ),
@@ -411,7 +411,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'PART',
                     'params' => array(
                         'channels' => '#twilight_zone',
-                        'all' => '#twilight_zone',
+                        'all' => ':#twilight_zone',
                     ),
                     'targets' => array('#twilight_zone'),
                 ),
@@ -423,7 +423,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'PART',
                     'params' => array(
                         'channels' => '#oz-ops,&group5',
-                        'all' => '#oz-ops,&group5',
+                        'all' => ':#oz-ops,&group5',
                     ),
                     'targets' => array('#oz-ops', '&group5'),
                 ),
@@ -750,7 +750,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'TOPIC',
                     'params' => array(
                         'channel' => '#test',
-                        'all' => '#test',
+                        'all' => ':#test',
                     ),
                     'targets' => array('#test'),
                 ),
@@ -763,7 +763,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'NAMES',
                     'params' => array(
                         'channels' => '#twilight_zone,#42',
-                        'all' => '#twilight_zone,#42',
+                        'all' => ':#twilight_zone,#42',
                     ),
                     'targets' => array('#twilight_zone', '#42'),
                 ),
@@ -790,7 +790,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'LIST',
                     'params' => array(
                         'channels' => '#twilight_zone,#42',
-                        'all' => '#twilight_zone,#42',
+                        'all' => ':#twilight_zone,#42',
                     ),
                     'targets' => array('#twilight_zone', '#42'),
                 ),
@@ -877,7 +877,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'VERSION',
                     'params' => array(
                         'server' => '*.se',
-                        'all' => '*.se',
+                        'all' => ':*.se',
                     ),
                 ),
             ),
@@ -888,7 +888,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'VERSION',
                     'params' => array(
                         'server' => 'tolsun.oulu.fi',
-                        'all' => 'tolsun.oulu.fi',
+                        'all' => ':tolsun.oulu.fi',
                     ),
                 ),
             ),
@@ -900,7 +900,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'STATS',
                     'params' => array(
                         'query' => 'm',
-                        'all' => 'm',
+                        'all' => ':m',
                     ),
                     'targets' => array('m'),
                 ),
@@ -928,7 +928,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'LINKS',
                     'params' => array(
                         'servermask' => '*.au',
-                        'all' => '*.au',
+                        'all' => ':*.au',
                     ),
                 ),
             ),
@@ -954,7 +954,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'TIME',
                     'params' => array(
                         'server' => 'tolsun.oulu.fi',
-                        'all' => 'tolsun.oulu.fi',
+                        'all' => ':tolsun.oulu.fi',
                     ),
                 ),
             ),
@@ -967,7 +967,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'TIME',
                     'params' => array(
                         'server' => '*.au',
-                        'all' => '*.au',
+                        'all' => ':*.au',
                     ),
                 ),
             ),
@@ -979,7 +979,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'CONNECT',
                     'params' => array(
                         'targetserver' => 'tolsun.oulu.fi',
-                        'all' => 'tolsun.oulu.fi',
+                        'all' => ':tolsun.oulu.fi',
                     ),
                 ),
             ),
@@ -1006,7 +1006,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'TRACE',
                     'params' => array(
                         'server' => '*.oulu.fi',
-                        'all' => '*.oulu.fi',
+                        'all' => ':*.oulu.fi',
                     ),
                 ),
             ),
@@ -1019,7 +1019,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'TRACE',
                     'params' => array(
                         'server' => 'AngelDust',
-                        'all' => 'AngelDust',
+                        'all' => ':AngelDust',
                     ),
                     'targets' => array('AngelDust'),
                 ),
@@ -1032,7 +1032,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'ADMIN',
                     'params' => array(
                         'server' => 'tolsun.oulu.fi',
-                        'all' => 'tolsun.oulu.fi',
+                        'all' => ':tolsun.oulu.fi',
                     ),
                 ),
             ),
@@ -1045,7 +1045,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'ADMIN',
                     'params' => array(
                         'server' => '*.edu',
-                        'all' => '*.edu',
+                        'all' => ':*.edu',
                     ),
                 ),
             ),
@@ -1057,7 +1057,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'INFO',
                     'params' => array(
                         'server' => 'csd.bu.edu',
-                        'all' => 'csd.bu.edu',
+                        'all' => ':csd.bu.edu',
                     ),
                 ),
             ),
@@ -1070,7 +1070,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'INFO',
                     'params' => array(
                         'server' => '*.fi',
-                        'all' => '*.fi',
+                        'all' => ':*.fi',
                     ),
                 ),
             ),
@@ -1081,7 +1081,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'INFO',
                     'params' => array(
                         'server' => 'Angel',
-                        'all' => 'Angel',
+                        'all' => ':Angel',
                     ),
                     'targets' => array('Angel'),
                 ),
@@ -1166,7 +1166,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'WHO',
                     'params' => array(
                         'name' => '*.fi',
-                        'all' => '*.fi',
+                        'all' => ':*.fi',
                     ),
                 ),
             ),
@@ -1190,7 +1190,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'WHOIS',
                     'params' => array(
                         'nickmasks' => 'wiz',
-                        'all' => 'wiz',
+                        'all' => ':wiz',
                     ),
                 ),
             ),
@@ -1214,7 +1214,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'WHOWAS',
                     'params' => array(
                         'nickname' => 'Wiz',
-                        'all' => 'Wiz',
+                        'all' => ':Wiz',
                     ),
                     'targets' => array('Wiz'),
                 ),
@@ -1268,7 +1268,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'PING',
                     'params' => array(
                         'server1' => 'tolsun.oulu.fi',
-                        'all' => 'tolsun.oulu.fi',
+                        'all' => ':tolsun.oulu.fi',
                     ),
                 ),
             ),
@@ -1279,7 +1279,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'PING',
                     'params' => array(
                         'server1' => 'WiZ',
-                        'all' => 'WiZ',
+                        'all' => ':WiZ',
                     ),
                     'targets' => array('WiZ'),
                 ),
@@ -1305,7 +1305,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'ERROR',
                     'params' => array(
                         'message' => 'Server *.fi already exists',
-                        'all' => 'Server *.fi already exists',
+                        'all' => ':Server *.fi already exists',
                     ),
                 ),
             ),
@@ -1330,7 +1330,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'AWAY',
                     'params' => array(
                         'message' => 'Gone to lunch.',
-                        'all' => 'Gone to lunch.',
+                        'all' => ':Gone to lunch.',
                     ),
                 ),
             ),
@@ -1367,7 +1367,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'SUMMON',
                     'params' => array(
                         'user' => 'jto',
-                        'all' => 'jto',
+                        'all' => ':jto',
                     ),
                     'targets' => array('jto'),
                 ),
@@ -1393,7 +1393,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'USERS',
                     'params' => array(
                         'server' => 'eff.org',
-                        'all' => 'eff.org',
+                        'all' => ':eff.org',
                     ),
                 ),
             ),
@@ -1406,7 +1406,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'USERS',
                     'params' => array(
                         'server' => 'tolsun.oulu.fi',
-                        'all' => 'tolsun.oulu.fi',
+                        'all' => ':tolsun.oulu.fi',
                     ),
                 ),
             ),
@@ -1420,7 +1420,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'WALLOPS',
                     'params' => array(
                         'text' => 'Connect \'*.uiuc.edu 6667\' from Joshua',
-                        'all' => 'Connect \'*.uiuc.edu 6667\' from Joshua',
+                        'all' => ':Connect \'*.uiuc.edu 6667\' from Joshua',
                     ),
                 ),
             ),
@@ -1448,7 +1448,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'command' => 'ISON',
                     'params' => array(
                         'nicknames' => 'phone trillian WiZ jarlek Avalon Angel Monstah',
-                        'all' => 'phone trillian WiZ jarlek Avalon Angel Monstah',
+                        'all' => ':phone trillian WiZ jarlek Avalon Angel Monstah',
                     ),
                 ),
             ),
@@ -2645,7 +2645,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         1 => 'Who left a null byte  in here?',
                         'iterable' => array(),
                         'tail' => 'Who left a null byte  in here?',
-                        'all' => 'Who left a null byte  in here?',
+                        'all' => ':Who left a null byte  in here?',
                     ),
                     'code' => 'RPL_MOTD',
                     'target' => 'BotNick',
@@ -2663,7 +2663,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         1 => 'Who left a carriage return  in here?',
                         'iterable' => array(),
                         'tail' => 'Who left a carriage return  in here?',
-                        'all' => 'Who left a carriage return  in here?',
+                        'all' => ':Who left a carriage return  in here?',
                     ),
                     'code' => 'RPL_MOTD',
                     'target' => 'BotNick',
@@ -2681,7 +2681,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         1 => 'Who left a line feed  in here?',
                         'iterable' => array(),
                         'tail' => 'Who left a line feed  in here?',
-                        'all' => 'Who left a line feed  in here?',
+                        'all' => ':Who left a line feed  in here?',
                     ),
                     'code' => 'RPL_MOTD',
                     'target' => 'BotNick',

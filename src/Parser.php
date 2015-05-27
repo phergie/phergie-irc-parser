@@ -407,7 +407,7 @@ class Parser implements ParserInterface
             }
 
             // Clean up and store the processed parameters
-            $params = array_merge(array('all' => $params[0]), array_filter($params, 'strlen'));
+            $params = array_merge(array('all' => ltrim($parsed['params'])), array_filter($params, 'strlen'));
             $params = $this->removeIntegerKeys($params);
             $parsed['params'] = $params;
         } elseif (ctype_digit($command)) {
@@ -421,7 +421,7 @@ class Parser implements ParserInterface
                 $temp = explode(' ', ltrim($parsed['params']), 2);
                 $parsed['target'] = array_shift($temp);
                 if ($parsed['params'] = (!empty($temp)) ? (' ' . array_shift($temp)) : '') {
-                    $all = $this->strip($parsed['params']);
+                    $all = ltrim($parsed['params']);
                     if (strpos($parsed['params'], ' :') !== false) {
                         list($head, $tail) = explode(' :', $parsed['params'], 2);
                     } else {
