@@ -446,6 +446,24 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            // Rizon uses IPv6 addresses in disguise, although it's not RFC conform
+            array(
+                ":WiZ!jto@DCE7E23D:1D6D03E4:2248D1C4:IP PART #playzone :I lost\r\n",
+                array(
+                    'prefix' => ':WiZ!jto@DCE7E23D:1D6D03E4:2248D1C4:IP',
+                    'nick' => 'WiZ',
+                    'user' => 'jto',
+                    'host' => 'DCE7E23D:1D6D03E4:2248D1C4:IP',
+                    'command' => 'PART',
+                    'params' => array(
+                            'channels' => '#playzone',
+                            'message' => 'I lost',
+                            'all' => '#playzone :I lost',
+                    ),
+                    'targets' => array('#playzone'),
+                ),
+            ),
+
             // MODE (RFC 1459 Section 4.2.3)
             array(
                 "MODE #Finnish :+im\r\n",
