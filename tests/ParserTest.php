@@ -446,6 +446,56 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            // Some servers use weird cloaked hostnames, although it's not RFC conform
+            array(
+                ":WiZ!jto@DCE7E23D:1D6D03E4:2248D1C4:IP PART #playzone :I lost\r\n",
+                array(
+                    'prefix' => ':WiZ!jto@DCE7E23D:1D6D03E4:2248D1C4:IP',
+                    'nick' => 'WiZ',
+                    'user' => 'jto',
+                    'host' => 'DCE7E23D:1D6D03E4:2248D1C4:IP',
+                    'command' => 'PART',
+                    'params' => array(
+                            'channels' => '#playzone',
+                            'message' => 'I lost',
+                            'all' => '#playzone :I lost',
+                    ),
+                    'targets' => array('#playzone'),
+                ),
+            ),
+            array(
+                ":WiZ!jto@facebook/hhvm/sgolemon PART #playzone :I lost\r\n",
+                array(
+                    'prefix' => ':WiZ!jto@facebook/hhvm/sgolemon',
+                    'nick' => 'WiZ',
+                    'user' => 'jto',
+                    'host' => 'facebook/hhvm/sgolemon',
+                    'command' => 'PART',
+                    'params' => array(
+                            'channels' => '#playzone',
+                            'message' => 'I lost',
+                            'all' => '#playzone :I lost',
+                    ),
+                    'targets' => array('#playzone'),
+                ),
+            ),
+            array(
+                ":WiZ!jto@gateway/web/irccloud.com/x-yjyvvvvrtuiwaqco PART #playzone :I lost\r\n",
+                array(
+                    'prefix' => ':WiZ!jto@gateway/web/irccloud.com/x-yjyvvvvrtuiwaqco',
+                    'nick' => 'WiZ',
+                    'user' => 'jto',
+                    'host' => 'gateway/web/irccloud.com/x-yjyvvvvrtuiwaqco',
+                    'command' => 'PART',
+                    'params' => array(
+                            'channels' => '#playzone',
+                            'message' => 'I lost',
+                            'all' => '#playzone :I lost',
+                    ),
+                    'targets' => array('#playzone'),
+                ),
+            ),
+
             // MODE (RFC 1459 Section 4.2.3)
             array(
                 "MODE #Finnish :+im\r\n",
