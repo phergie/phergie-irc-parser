@@ -765,6 +765,18 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            array(
+                "MODE :#channel\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#channel',
+                        'all' => ':#channel',
+                    ),
+                    'targets' => array('#channel'),
+                ),
+            ),
+
             // TOPIC (RFC 1459 Section 4.2.4)
             array(
                 ":Wiz TOPIC #test :New topic\r\n",

@@ -231,7 +231,7 @@ class Parser implements ParserInterface
             'SQUIT'    => "/^(?:(?P<server>$middle)(?P<comment>$trailing))$/",
             'JOIN'     => "/^(?:(?P<channels>$middle|$trailing)(?P<keys>$trailing)?)$/",
             'PART'     => "/^(?:(?P<channels>$middle|$trailing)(?P<message>$trailing)?)$/",
-            'MODE'     => "/^(?:(?P<target>$middle)(?P<mode>$middle|$trailing)(?P<params>$trailing)?)$/",
+            'MODE'     => "/^(?:(?P<target>$middle|$trailing)(?P<mode>$middle|$trailing)?(?P<params>$trailing)?)$/",
             'TOPIC'    => "/^(?:(?P<channel>$middle|$trailing)(?P<topic>$trailing)?)$/",
             'NAMES'    => "/^(?:(?P<channels>$trailing))$/",
             'LIST'     => "/^(?:(?:(?P<channels>$trailing)|$middle)?(?P<server>$trailing)?)$/",
@@ -367,7 +367,7 @@ class Parser implements ParserInterface
                          * only one channel mode is being set.
                          * This functionality is DEPRECATED, and will not occur if more than one
                          * channel mode is being set. Use $params['params'] instead. */
-                        if (strlen($params['mode']) == 2 && isset($params['params'])) {
+                        if (isset($params['mode']) && strlen($params['mode']) == 2 && isset($params['params'])) {
                             switch ($params['mode']{1}) {
                                 case 'l':
                                     $params['limit'] = $params['params'];
