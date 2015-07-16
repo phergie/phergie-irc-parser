@@ -766,12 +766,12 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             ),
 
             array(
-                "MODE #channel\r\n",
+                "MODE :#channel\r\n",
                 array(
                     'command' => 'MODE',
                     'params' => array(
                         'channel' => '#channel',
-                        'all' => '#channel',
+                        'all' => ':#channel',
                     ),
                     'targets' => array('#channel'),
                 ),
