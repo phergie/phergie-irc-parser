@@ -206,7 +206,7 @@ class Parser implements ParserInterface
         // ? provides for relaxed parsing of messages without trailing parameters properly demarcated
         $trailing = "(?: :?[^$null$crlf]*)";
         $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
-        $name = "[$letter$number](?:[$letter$number:\\/\\-]*[$letter$number])?";
+        $name = "[$letter$number-_](?:[$letter$number:\\/\\-]*[$letter$number])?";
         $host = "$name(?:\\.(?:$name)*)*";
         $nick = "(?:[$letter$special][$letter$number$special-]*)";
         $user = "(?:[^ $null$crlf@]+)";
@@ -333,7 +333,10 @@ class Parser implements ParserInterface
 
         // Parse the message, or bail if the parser deems the line to be invalid.
         if (!preg_match($this->message, $message, $parsed)) {
-            $parsed = array('invalid' => $message);
+            $parsed = [
+                'invalid' => $message,
+                'regex' => $this->message,
+            ];
             if (strlen($buf)) {
                 $parsed['tail'] = $buf;
             }
