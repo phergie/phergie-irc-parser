@@ -197,22 +197,25 @@ class Parser implements ParserInterface
     public function __construct()
     {
         $crlf = "\r\n";
-        $letter = 'a-zA-Z';
+        $letter = '\\w';
         $number = '0-9';
-        $special = preg_quote('[]\`_^{|}');
+        $special = preg_quote('[]\`_^{|}~');
         $null = '\\x00';
         $command = "(?P<command>[$letter]+|[$number]{3})";
         $middle = "(?: [^ $null$crlf:][^ $null$crlf]*)";
         // ? provides for relaxed parsing of messages without trailing parameters properly demarcated
         $trailing = "(?: :?[^$null$crlf]*)";
         $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
-        $name = "[$letter$number](?:[$letter$number:\\/\\-]*[$letter$number])?";
+        /**
+         * Adding characters - _ ^ ] [ to support ChatHispano IRC Network
+         */
+        $name = "[$letter$number-_\\^](?:[$letter$number:\\/\\-_\\.\\]\\[\\^]*[$letter$number])?";
         $host = "$name(?:\\.(?:$name)*)*";
         $nick = "(?:[$letter$special][$letter$number$special-]*)";
         $user = "(?:[^ $null$crlf@]+)";
         $prefix = "(?:(?:(?P<nick>$nick)(?:!(?P<user>$user))?(?:@(?P<host>$host))?)|(?P<servername>$host))";
         $message = "(?P<prefix>:$prefix )?$command$params$crlf";
-        $this->message = "/^$message\$/SU";
+        $this->message = "/^$message\$/SUu";
 
         $chstring = "[^ \a$null,$crlf]+";
         $channel = $this->channel = "(?:[#&]$chstring)";
@@ -329,11 +332,13 @@ class Parser implements ParserInterface
         $message = substr($message, 0, $eol);
 
         // Strip out invalid characters
-        $message = preg_replace("/\\0|(?:(?<!\r)\n)|(?:\r(?!\n))/", '', $message);
+        $message = utf8_encode(preg_replace("/\\0|(?:(?<!\r)\n)|(?:\r(?!\n))/", '', $message));
 
         // Parse the message, or bail if the parser deems the line to be invalid.
         if (!preg_match($this->message, $message, $parsed)) {
-            $parsed = array('invalid' => $message);
+            $parsed = [
+                'invalid' => $message,
+            ];
             if (strlen($buf)) {
                 $parsed['tail'] = $buf;
             }

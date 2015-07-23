@@ -2893,7 +2893,17 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             array(
                 ":nick!ident@- PRIVMSG target :message\r\n",
                 array(
-                    'invalid' => ":nick!ident@- PRIVMSG target :message\r\n",
+                    'prefix' => ':nick!ident@-',
+                    'nick' => 'nick',
+                    'user' => 'ident',
+                    'host' => '-',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'all' => 'target :message',
+                        'receivers' => 'target',
+                        'text' => 'message',
+                    ),
+                    'targets' => array('target'),
                 ),
             ),
 
