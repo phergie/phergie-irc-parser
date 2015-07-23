@@ -206,6 +206,9 @@ class Parser implements ParserInterface
         // ? provides for relaxed parsing of messages without trailing parameters properly demarcated
         $trailing = "(?: :?[^$null$crlf]*)";
         $params = "(?P<params>$trailing?|(?:$middle{0,14}$trailing))";
+        /**
+         * Adding characters - _ ^ ] [ to support ChatHispano IRC Network
+         */
         $name = "[$letter$number-_\\^](?:[$letter$number:\\/\\-_\\.\\]\\[\\^]*[$letter$number])?";
         $host = "$name(?:\\.(?:$name)*)*";
         $nick = "(?:[$letter$special][$letter$number$special-]*)";
