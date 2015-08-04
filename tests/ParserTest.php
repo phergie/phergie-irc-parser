@@ -1217,6 +1217,40 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            array(
+                ":foobar1!foobar2@foobar3.user.network PRIVMSG #channel :hi all\r\n",
+                array(
+                    'prefix' => ':foobar1!foobar2@foobar3.user.network',
+                    'nick' => 'foobar1',
+                    'user' => 'foobar2',
+                    'host' => 'foobar3.user.network',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => '#channel',
+                        'text' => 'hi all',
+                        'all' => '#channel :hi all',
+                    ),
+                    'targets' => array('#channel'),
+                ),
+            ),
+
+            array(
+                ":foo_bar1!foo_bar2@foo_bar3.user.network PRIVMSG #channel :hi all\r\n",
+                array(
+                    'prefix' => ':foo_bar1!foo_bar2@foo_bar3.user.network',
+                    'nick' => 'foo_bar1',
+                    'user' => 'foo_bar2',
+                    'host' => 'foo_bar3.user.network',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => '#channel',
+                        'text' => 'hi all',
+                        'all' => '#channel :hi all',
+                    ),
+                    'targets' => array('#channel'),
+                ),
+            ),
+
             // NOTE: Because of syntactic equivalence, data sets for NOTICE
             // (RFC 1459 Section 4.4.2) equivalent to those for PRIVMSG are
             // derived later in this method rather than being duplicated here
