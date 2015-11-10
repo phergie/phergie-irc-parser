@@ -13,7 +13,7 @@
         "php": ">=5.4.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.6"
+        "phergie/phergie-irc-bot-react-development": "~1.0.0"
     },
     "autoload": {
         "psr-4": {
