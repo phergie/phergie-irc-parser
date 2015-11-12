@@ -2925,13 +2925,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             ),
 
             array(
-                ":nick!ident@- PRIVMSG target :message\r\n",
-                array(
-                    'invalid' => ":nick!ident@- PRIVMSG target :message\r\n",
-                ),
-            ),
-
-            array(
                 ":nick!ident@localhost PRIVMSG target :message\r\n",
                 array(
                     'prefix' => ':nick!ident@localhost',
@@ -2961,6 +2954,23 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'realname' => 'Ronnie Reagan',
                     ),
                     'targets' => array('myident'),
+                ),
+            ),
+
+            // Color codes in hostname. Possible for example on Rizon.
+            array(
+                ":Float_!~pi@\x034Float\x030.\x0310Rizon\x030.\x034Rules\x03 JOIN :#/b/\r\n",
+                array(
+                    'prefix' => ":Float_!~pi@\x034Float\x030.\x0310Rizon\x030.\x034Rules\x03",
+                    'nick' => 'Float_',
+                    'user' => '~pi',
+                    'host' => "\x034Float\x030.\x0310Rizon\x030.\x034Rules\x03",
+                    'command' => 'JOIN',
+                    'params' => array(
+                        'all' => ':#/b/',
+                        'channels' => '#/b/',
+                    ),
+                    'targets' => array('#/b/'),
                 ),
             ),
         );
