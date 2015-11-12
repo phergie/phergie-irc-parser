@@ -2925,13 +2925,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             ),
 
             array(
-                ":nick!ident@- PRIVMSG target :message\r\n",
-                array(
-                    'invalid' => ":nick!ident@- PRIVMSG target :message\r\n",
-                ),
-            ),
-
-            array(
                 ":nick!ident@localhost PRIVMSG target :message\r\n",
                 array(
                     'prefix' => ':nick!ident@localhost',
@@ -2961,6 +2954,59 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'realname' => 'Ronnie Reagan',
                     ),
                     'targets' => array('myident'),
+                ),
+            ),
+
+            // Color codes in hostname. Possible for example on Rizon.
+            array(
+                ":Float_!~pi@\x034Float\x030.\x0310Rizon\x030.\x034Rules\x03 JOIN :#/b/\r\n",
+                array(
+                    'prefix' => ":Float_!~pi@\x034Float\x030.\x0310Rizon\x030.\x034Rules\x03",
+                    'nick' => 'Float_',
+                    'user' => '~pi',
+                    'host' => "\x034Float\x030.\x0310Rizon\x030.\x034Rules\x03",
+                    'command' => 'JOIN',
+                    'params' => array(
+                        'all' => ':#/b/',
+                        'channels' => '#/b/',
+                    ),
+                    'targets' => array('#/b/'),
+                ),
+            ),
+
+            // Asterisk (*) in nickname. Used mainly by modules of IRC bouncers like ZNC.
+            array(
+                ":*status!znc@znc.in PRIVMSG thebot :Error from Server [Closing Link: 127.0.0.1 (Killed (linear (youtube loop)))]\r\n",
+                array(
+                    'prefix' => ":*status!znc@znc.in",
+                    'nick' => '*status',
+                    'user' => 'znc',
+                    'host' => "znc.in",
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'thebot',
+                        'text' => 'Error from Server [Closing Link: 127.0.0.1 (Killed (linear (youtube loop)))]',
+                        'all' => 'thebot :Error from Server [Closing Link: 127.0.0.1 (Killed (linear (youtube loop)))]',
+                    ),
+                    'targets' => array('thebot'),
+                ),
+            ),
+
+            // On Quakenet it seems that server can set usermode.
+            array(
+                ":*.quakenet.org MODE #example +o mike1256\r\n",
+                array(
+                    'prefix' => ":*.quakenet.org",
+                    'servername' => '*.quakenet.org',
+                    'command' => 'MODE',
+                    'params' => array(
+                        'all' => '#example +o mike1256',
+                        'mode' => '+o',
+                        'channel' => '#example',
+                        'user' => 'mike1256',
+                        'params' => 'mike1256',
+                    ),
+                    'targets' => array('#example'),
                 ),
             ),
         );
