@@ -176,6 +176,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'targets' => array('Wiz_'),
                 ),
             ),
+            
+            // Nick with ~ character allowed
+            array(
+                "NICK :Incredible~\r\n",
+                array(
+                    'command' => 'NICK',
+                    'params' => array(
+                        'nickname' => 'Incredible~',
+                        'all' => ':Incredible~',
+                    ),
+                    'targets' => array('Incredible~'),
+                ),
+            ),
 
             array(
                 "NICK Wiz :1\r\n",
