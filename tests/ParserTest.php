@@ -1165,6 +1165,22 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            // Test nicks with ~
+            array(
+                ":Angel~ PRIVMSG Wiz~ :Hello are you receiving this message ?\r\n",
+                array(
+                    'prefix' => ':Angel~',
+                    'nick' => 'Angel~',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'Wiz~',
+                        'text' => 'Hello are you receiving this message ?',
+                        'all' => 'Wiz~ :Hello are you receiving this message ?',
+                    ),
+                    'targets' => array('Wiz~'),
+                ),
+            ),
+
             array(
                 "PRIVMSG Angel :yes I'm receiving it !receiving it !'u>(768u+1n) .br\r\n",
                 array(
