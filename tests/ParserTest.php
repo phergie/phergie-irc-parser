@@ -525,6 +525,22 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 ),
             ),
 
+            // Testing nicks with ~
+            array(
+                "MODE #Finnish +o :Kilroy~\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#Finnish',
+                        'mode' => '+o',
+                        'params' => 'Kilroy~',
+                        'user' => 'Kilroy~',
+                        'all' => '#Finnish +o :Kilroy~',
+                    ),
+                    'targets' => array('#Finnish'),
+                ),
+            ),
+
             array(
                 "MODE #Finnish +v :Wiz\r\n",
                 array(
