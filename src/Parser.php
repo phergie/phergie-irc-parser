@@ -199,7 +199,7 @@ class Parser implements ParserInterface
         $crlf = "\r\n";
         $letter = 'a-zA-Z';
         $number = '0-9';
-        $special = preg_quote('[]\`_^{|}');
+        $special = preg_quote('[]\`_^{|}~');
         $null = '\\x00';
         $command = "(?P<command>[$letter]+|[$number]{3})";
         $middle = "(?: [^ $null$crlf:][^ $null$crlf]*)";

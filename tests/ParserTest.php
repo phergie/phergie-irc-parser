@@ -176,6 +176,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                     'targets' => array('Wiz_'),
                 ),
             ),
+            
+            // Nick with ~ character allowed
+            array(
+                "NICK :Incredible~\r\n",
+                array(
+                    'command' => 'NICK',
+                    'params' => array(
+                        'nickname' => 'Incredible~',
+                        'all' => ':Incredible~',
+                    ),
+                    'targets' => array('Incredible~'),
+                ),
+            ),
 
             array(
                 "NICK Wiz :1\r\n",
@@ -520,6 +533,22 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'params' => 'Kilroy',
                         'user' => 'Kilroy',
                         'all' => '#Finnish +o :Kilroy',
+                    ),
+                    'targets' => array('#Finnish'),
+                ),
+            ),
+
+            // Testing nicks with ~
+            array(
+                "MODE #Finnish +o :Kilroy~\r\n",
+                array(
+                    'command' => 'MODE',
+                    'params' => array(
+                        'channel' => '#Finnish',
+                        'mode' => '+o',
+                        'params' => 'Kilroy~',
+                        'user' => 'Kilroy~',
+                        'all' => '#Finnish +o :Kilroy~',
                     ),
                     'targets' => array('#Finnish'),
                 ),
@@ -1162,6 +1191,22 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                         'all' => 'Wiz :Hello are you receiving this message ?',
                     ),
                     'targets' => array('Wiz'),
+                ),
+            ),
+
+            // Test nicks with ~
+            array(
+                ":Angel~ PRIVMSG Wiz~ :Hello are you receiving this message ?\r\n",
+                array(
+                    'prefix' => ':Angel~',
+                    'nick' => 'Angel~',
+                    'command' => 'PRIVMSG',
+                    'params' => array(
+                        'receivers' => 'Wiz~',
+                        'text' => 'Hello are you receiving this message ?',
+                        'all' => 'Wiz~ :Hello are you receiving this message ?',
+                    ),
+                    'targets' => array('Wiz~'),
                 ),
             ),
 
