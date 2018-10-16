@@ -2,3 +2,7 @@ composer.phar
 tests/composer.phar
 tests/vendor/*
 vendor/
+
+/tests export-ignore
+.travis.yml export-ignore
+phpunit.xml export-ignore
