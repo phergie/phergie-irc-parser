@@ -1,3 +1,8 @@
+# This project is abandoned
+
+This repo is being kept for posterity and will be archived in a readonly state. 
+If you're interested it can be forked under a new Composer namespace/GitHub organization.
+
 # phergie/phergie-irc-parser
 
 A PHP-based parser for messages conforming to the IRC protocol as described in [RFC 1459](https://tools.ietf.org/html/rfc1459) and [RFC 2812](https://tools.ietf.org/html/rfc2812).
